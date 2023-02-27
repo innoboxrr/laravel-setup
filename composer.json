@@ -1,0 +1,19 @@
+{
+    "name": "innoboxrr/laravel-setup",
+    "description": "Configuración de inicial de una aplicación de laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Innoboxrr\\LaravelSetup\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Homero Raul",
+            "email": "h.raulvc@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
