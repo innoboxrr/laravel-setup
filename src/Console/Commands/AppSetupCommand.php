@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Innoboxrr\LaravelSetup\Console\Commands;
 
 use Illuminate\Console\Command;
 use Innoboxrr\LaravelSetup\Utils\ComposerJsonEditor;
