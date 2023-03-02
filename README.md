@@ -32,7 +32,9 @@ Este comando ejecutará todas las tareas de configuración descritas anteriormen
 Al finalizar la instalación debe ejecutar los siguintes comandos:
 
 `composer update`
+
 `npm install`
+
 `php artisan route:json`
 
 Después arranca el servidor con
