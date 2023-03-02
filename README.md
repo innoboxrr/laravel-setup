@@ -29,6 +29,24 @@ Para utilizar el comando `AppSetupCommand`, debes ejecutar el siguiente comando 
 
 Este comando ejecutará todas las tareas de configuración descritas anteriormente.
 
+Al finalizar la instalación debe ejecutar los siguintes comandos:
+
+`composer update`
+`npm install`
+`php artisan route:json`
+
+Después arranca el servidor con
+
+`php artisan serve`
+
+Y compila los assets con
+
+`npm run dev`
+
+Si lo deseas compilar para producción ejecuta
+
+`npm run prod`
+
 ## Nota
 
 Este comando debe ser utilizado con precaución, ya que realiza cambios importantes en la aplicación de Laravel. Si no estás seguro de lo que estás haciendo, es recomendable que realices una copia de seguridad de la aplicación antes de ejecutar este comando.
