@@ -4,7 +4,7 @@
 
         <the-header />
         
-        <div uk-height-viewport="min-height: 300">
+        <div uk-height-viewport="expand: true">
             
             <router-view></router-view>
 
