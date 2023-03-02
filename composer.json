@@ -22,5 +22,5 @@
                 "Innoboxrr\\LaravelSetup\\Providers\\LaravelSetupServiceProvider"
             ]
         }
-    },
+    }
 }
