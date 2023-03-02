@@ -1,11 +1,11 @@
 <?php
 
-namespace Innoboxrr\LaravelAuth\Providers;
+namespace Innoboxrr\LaravelSetup\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Innoboxrr\LaravelSetup\Console\Commands\AppSetupCommand;
 
-class LaravelAuthServiceProvider extends ServiceProvider
+class LaravelSetupServiceProvider extends ServiceProvider
 {
     
     /**
