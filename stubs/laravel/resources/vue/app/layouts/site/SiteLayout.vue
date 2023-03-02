@@ -4,7 +4,11 @@
 
         <the-header />
         
-        <router-view></router-view>
+        <div uk-height-viewport="min-height: 300">
+            
+            <router-view></router-view>
+
+        </div>
         
         <the-footer />
         
