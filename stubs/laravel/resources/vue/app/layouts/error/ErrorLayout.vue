@@ -3,7 +3,7 @@
 	<div class="uk-section-default uk-position-relative uk-light">  
 
         <div 
-        	style="background-image: url(https://i.imgur.com/aTC5TIO.jpg);" 
+        	style="background-image: url(https://i.ibb.co/cwJHG0b/aTC5TIO.jpg);" 
         	class="uk-background-norepeat uk-background-cover uk-background-center-center uk-section uk-flex uk-flex-middle" 
         	uk-height-viewport="offset-top: true">  
 
