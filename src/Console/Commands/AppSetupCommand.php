@@ -40,8 +40,6 @@ class AppSetupCommand extends Command
 
         $this->updateComposerJson();
 
-        $this->addCssAdmin();
-
         $this->replaceCssApp();
 
         $this->addCssCustom();
@@ -163,15 +161,6 @@ class AppSetupCommand extends Command
     }
 
     // CSS //
-
-    private function addCssAdmin()
-    {
-
-        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/css/admin.css.stub');
-
-        file_put_contents(base_path('resources/css/admin.css'), $viteConfig);
-
-    }
 
     private function replaceCssApp()
     {
