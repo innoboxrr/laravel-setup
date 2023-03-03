@@ -24,5 +24,5 @@ La estrucutra del directorio es la siguinte
 
 Debe tenerse en cuenta que esta implementación requiere la instalación de:
  - VueCrud
- 	- BreadcrumbComponent
+ - BreadcrumbComponent
  - InoboxrFormElements
