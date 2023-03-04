@@ -156,7 +156,7 @@ class AppSetupCommand extends Command
 
         $editor->addParameter('require.innoboxrr/laravel-auth', '^1.0');
 
-        $editor->addParameter('require.innoboxrr/innoboxrr/larapack-generator', '^1.0');
+        $editor->addParameter('require-dev.innoboxrr/innoboxrr/larapack-generator', '^1.0');
 
         $editor->addParameter('autoload.files', ['app/Helpers/app.php']);
 
