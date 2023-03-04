@@ -48,6 +48,8 @@ export default defineConfig({
             '@layouts': '/resources/vue/app/layouts',
             '@router': '/resources/vue/router',
             '@vuex': '/resources/vue/vuex',
+            '@views': '/resources/vue/app/views',
+            '@models': '/resources/vue/app/views/admin/models',
     	}
     }
 
