@@ -141,7 +141,8 @@ class AppSetupCommand extends Command
 
         $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Http/Controllers/AppController.php.stub');
 
-        file_put_contents(base_path('app/Http/Controllers/AppController.php'), $viteConfig);
+        file_put_contents(base_path('app/Http/Controllers/AppC
+            ontroller.php'), $viteConfig);
 
     }
 
@@ -155,6 +156,16 @@ class AppSetupCommand extends Command
         $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
 
         $editor->addParameter('require.innoboxrr/laravel-auth', '^1.0');
+
+        $editor->addParameter('require.innoboxrr/search-surge', '^1.0');
+
+        $editor->addParameter('require.innoboxrr/traits', '^1.0');
+
+        $editor->addParameter('require.maatwebsite/excel', '^3.1');
+
+        $editor->addParameter('require.staudenmeir/belongs-to-through', '^2.1');
+
+        $editor->addParameter('require.staudenmeir/eloquent-has-many-deep', '^1.0');
 
         $editor->addParameter('require-dev.innoboxrr/larapack-generator', '^1.0');
 
