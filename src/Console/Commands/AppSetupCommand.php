@@ -141,8 +141,7 @@ class AppSetupCommand extends Command
 
         $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Http/Controllers/AppController.php.stub');
 
-        file_put_contents(base_path('app/Http/Controllers/AppC
-            ontroller.php'), $viteConfig);
+        file_put_contents(base_path('app/Http/Controllers/AppController.php'), $viteConfig);
 
     }
 
