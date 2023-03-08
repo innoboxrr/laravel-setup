@@ -7,8 +7,8 @@ export default defineConfig({
     plugins: [
     
         laravel([
-        	'resources/js/app.js',
-        	'resources/css/app.css'
+            'resources/js/app.js',
+            'resources/css/app.css'
         ]),
     
         vue({
@@ -39,18 +39,16 @@ export default defineConfig({
     ],
 
     resolve: {
-    	alias: {
-    		'@': '/resources',
+        alias: {
+            '@': '/resources',
             '@js': '/resources/js',
             '@css': '/resources/css',
             '@json': '/resources/json',
             '@app': '/resources/vue/app',
-            '@layouts': '/resources/vue/app/layouts',
             '@router': '/resources/vue/router',
             '@vuex': '/resources/vue/vuex',
-            '@views': '/resources/vue/app/views',
-            '@models': '/resources/vue/app/views/admin/models',
-    	}
+            '@models': '/resources/vue/sections/admin/models',
+        }
     }
 
 });
