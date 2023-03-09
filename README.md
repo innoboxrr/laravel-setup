@@ -47,7 +47,7 @@ Y compila los assets con
 
 Si lo deseas compilar para producción ejecuta
 
-`npm run prod`
+`npm run build`
 
 ## Nota
 
