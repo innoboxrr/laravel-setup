@@ -23,7 +23,7 @@
                         
                         <img 
                             src="https://siconsulta.com/assets/images/logos/logo_150.png" 
-                            style="width: 35px; height: 35px; object-fit: contain;" />
+                            style="width: 35px; height: 35px; object-fit: contain; display: unset;" />
 
                     </router-link>
 
