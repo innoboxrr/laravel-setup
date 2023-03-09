@@ -1,5 +1,5 @@
 <template>
 	
-	<p>Admin Dashboard Custom View</p>
+	<p>Home View</p>
 
 </template>
