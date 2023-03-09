@@ -29,25 +29,9 @@ Para utilizar el comando `AppSetupCommand`, debes ejecutar el siguiente comando 
 
 Este comando ejecutará todas las tareas de configuración descritas anteriormente.
 
-Al finalizar la instalación debe ejecutar los siguintes comandos:
+Después ejecuta el comando: 
 
-`composer update`
-
-`npm install`
-
-`php artisan route:json`
-
-Después arranca el servidor con
-
-`php artisan serve`
-
-Y compila los assets con
-
-`npm run dev`
-
-Si lo deseas compilar para producción ejecuta
-
-`npm run build`
+`php artisan app:install`
 
 ## Nota
 

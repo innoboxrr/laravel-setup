@@ -20,7 +20,7 @@ class AppSetupCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Configurar la instalación de la aplicación';
 
     /**
      * Execute the console command.
@@ -66,9 +66,7 @@ class AppSetupCommand extends Command
         
         $this->replaceWebRoutesFile();
 
-        // Update composer from php
-
-        // Update npm from php
+        $this->info('¡La configuración se ha completado con éxito!'); 
        
     }
 
