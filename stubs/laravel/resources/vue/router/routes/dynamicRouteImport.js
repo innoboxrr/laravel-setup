@@ -1,4 +1,4 @@
-async function dynamicRouteImport(paths) {
+function dynamicRouteImport(paths) {
 
 	const routes = [];
 
@@ -9,7 +9,7 @@ async function dynamicRouteImport(paths) {
 
 		try {
 		
-			pathRoutes = (await import(path)).default;
+			pathRoutes = paths[path].default;
 		
 		} catch (e) {
 			
