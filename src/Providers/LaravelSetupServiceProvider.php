@@ -4,6 +4,7 @@ namespace Innoboxrr\LaravelSetup\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Innoboxrr\LaravelSetup\Console\Commands\AppSetupCommand;
+use Innoboxrr\LaravelSetup\Console\Commands\AppInstallCommand;
 
 class LaravelSetupServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,7 @@ class LaravelSetupServiceProvider extends ServiceProvider
         
         $this->commands([
             AppSetupCommand::class,
+            AppInstallCommand::class
         ]);
 
     }
