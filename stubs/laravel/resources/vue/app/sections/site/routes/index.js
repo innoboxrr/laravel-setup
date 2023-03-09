@@ -1,6 +1,6 @@
 import { dynamicRouteImport } from '@router/routes/dynamicRouteImport'
 
-let pagesRoutes = await dynamicRouteImport(import.meta.glob('/resources/vue/app/sections/site/pages/**/routes/index.js'));
+let pagesRoutes = dynamicRouteImport(import.meta.globEager('/resources/vue/app/sections/site/pages/**/routes/index.js'));
 
 export default [
 
