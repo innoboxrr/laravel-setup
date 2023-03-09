@@ -128,18 +128,18 @@ class AppSetupCommand extends Command
     private function addTailwindCssConfig()
     {
 
-        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/tailwind.config.js.stub');
+        $tailwindCssConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/tailwind.config.js.stub');
 
-        file_put_contents(base_path('tailwind.config.js'), $viteConfig);
+        file_put_contents(base_path('tailwind.config.js'), $tailwindCssConfig);
 
     }
 
     private function addPostCssConfig()
     {
 
-        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/postcss.config.js.stub');
+        $postCssConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/postcss.config.js.stub');
 
-        file_put_contents(base_path('postcss.config.js'), $viteConfig);
+        file_put_contents(base_path('postcss.config.js'), $postCssConfig);
 
     }
 
