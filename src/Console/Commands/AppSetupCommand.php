@@ -34,6 +34,10 @@ class AppSetupCommand extends Command
 
         $this->replaceViteConfig();
 
+        $this->addTailwindCssConfig();
+
+        $this->addPostCssConfig();
+
         $this->addAppHelpers();
 
         $this->addAppController();
@@ -118,6 +122,26 @@ class AppSetupCommand extends Command
         $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/vite.config.js.stub');
 
         file_put_contents(base_path('vite.config.js'), $viteConfig);
+
+    }
+
+    // TAILWIND
+
+    private function addTailwindCssConfig()
+    {
+
+        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/tailwind.config.js.stub');
+
+        file_put_contents(base_path('tailwind.config.js'), $viteConfig);
+
+    }
+
+    private function addPostCssConfig()
+    {
+
+        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/postcss.config.js.stub');
+
+        file_put_contents(base_path('postcss.config.js'), $viteConfig);
 
     }
 
