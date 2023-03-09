@@ -59,6 +59,12 @@ class AppInstallCommand extends Command
             throw new \RuntimeException($process->getErrorOutput());
         }
 
+        $process = new Process(['cp', 'vendor/innoboxrr/larapack-generator/builder.example', 'builder']);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+
         $this->info('¡La instalación se ha completado con éxito!'); 
 
        
