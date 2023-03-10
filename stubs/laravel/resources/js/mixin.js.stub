@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import lang from 'innoboxrr-i18n'
 
 export default {
 
@@ -13,6 +14,12 @@ export default {
 	},
 
 	methods: {
+
+		__(key, replace) {
+
+			return lang(key, replace);
+
+		},
 
 		alert(type = 'none', object = {}) {
 
