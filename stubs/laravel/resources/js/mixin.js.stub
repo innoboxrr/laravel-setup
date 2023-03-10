@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
 import lang from 'innoboxrr-i18n'
+import { replaceWord, strlimit } from 'innoboxrr-js-libs/libs/string.js'
+import { numberFormat } from 'innoboxrr-js-libs/libs/number.js'
 
 export default {
 
