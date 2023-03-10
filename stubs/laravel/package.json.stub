@@ -23,6 +23,7 @@
         "innoboxrr-form-elements": "^1.0.0",
         "innoboxrr-i18n": "^1.0.0",
         "innoboxrr-js-validator": "^1.0.0",
+        "innoboxrr-js-libs": "^1.0.0",
         "innoboxrr-route-resolver": "^1.0.0",
         "innoboxrr-vue-datatable": "^1.0.0",
         "inputmask": "^5.0.7",
