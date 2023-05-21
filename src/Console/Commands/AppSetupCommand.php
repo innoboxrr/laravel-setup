@@ -316,6 +316,7 @@ class AppSetupCommand extends Command
     //////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////
 
+    // Eliminar directorio
     public function rrDir($path)
     {
 
@@ -349,6 +350,7 @@ class AppSetupCommand extends Command
 
     }
 
+    // Crear directorio
     public function mkDir($path)
     {
 
@@ -368,6 +370,7 @@ class AppSetupCommand extends Command
 
     }
 
+    // Copiar directorio
     public function cpDir($src, $dst) {
 
         $dir = opendir($src);
