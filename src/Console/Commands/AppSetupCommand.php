@@ -176,17 +176,19 @@ class AppSetupCommand extends Command
 
         $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
 
-        $editor->addParameter('require.innoboxrr/laravel-auth', '^1.0');
+        $editor->addParameter('require.innoboxrr/laravel-auth', '^2.0');
 
         $editor->addParameter('require.innoboxrr/search-surge', '^1.0');
 
         $editor->addParameter('require.innoboxrr/traits', '^1.0');
 
-        $editor->addParameter('require.maatwebsite/excel', '^3.1');
+        $editor->addParameter('require.maatwebsite/excel', '^3.1'); // Excel
 
-        $editor->addParameter('require.staudenmeir/belongs-to-through', '^2.1');
+        $editor->addParameter('require.league/flysystem-aws-s3-v3', '^3.0'); // AWS S3
 
-        $editor->addParameter('require.staudenmeir/eloquent-has-many-deep', '^1.0');
+        $editor->addParameter('require.staudenmeir/belongs-to-through', '^2.1'); // **
+
+        $editor->addParameter('require.staudenmeir/eloquent-has-many-deep', '^1.0'); // **
 
         $editor->addParameter('require-dev.innoboxrr/larapack-generator', '^1.0');
 
@@ -314,6 +316,7 @@ class AppSetupCommand extends Command
     //////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////
 
+    // Eliminar directorio
     public function rrDir($path)
     {
 
@@ -347,6 +350,7 @@ class AppSetupCommand extends Command
 
     }
 
+    // Crear directorio
     public function mkDir($path)
     {
 
@@ -366,6 +370,7 @@ class AppSetupCommand extends Command
 
     }
 
+    // Copiar directorio
     public function cpDir($src, $dst) {
 
         $dir = opendir($src);
