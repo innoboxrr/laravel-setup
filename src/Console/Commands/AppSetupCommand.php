@@ -176,7 +176,7 @@ class AppSetupCommand extends Command
 
         $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
 
-        $editor->addParameter('require.innoboxrr/laravel-auth', '^2.0');
+        $editor->addParameter('require.innoboxrr/laravel-auth', '^3.0');
 
         $editor->addParameter('require.innoboxrr/search-surge', '^1.0');
 
