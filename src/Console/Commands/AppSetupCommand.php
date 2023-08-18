@@ -178,7 +178,7 @@ class AppSetupCommand extends Command
 
         $editor->addParameter('require.innoboxrr/laravel-auth', '^3.0');
 
-        $editor->addParameter('require.innoboxrr/search-surge', '^1.0');
+        $editor->addParameter('require.innoboxrr/search-surge', '^2.0');
 
         $editor->addParameter('require.innoboxrr/traits', '^1.0');
 
@@ -190,7 +190,7 @@ class AppSetupCommand extends Command
 
         $editor->addParameter('require.staudenmeir/eloquent-has-many-deep', '^1.0'); // **
 
-        $editor->addParameter('require-dev.innoboxrr/larapack-generator', '^2.0');
+        $editor->addParameter('require-dev.innoboxrr/larapack-generator', '^3.0');
 
         $editor->addParameter('autoload.files', ['app/Helpers/app.php']);
 
