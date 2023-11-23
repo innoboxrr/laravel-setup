@@ -1,0 +1,11 @@
+import { initFlowbite } from 'flowbite'
+
+export const globalDirectivesRegistration = (app) => {
+
+	app.directive('flowbite', {
+	    mounted(el) {
+	        initFlowbite(el);
+	    }
+	});
+
+}

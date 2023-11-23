@@ -10,9 +10,13 @@
 
     import CustomIcons from 'uikit-custom-icons'
 
+    import LocalIcons from '@js/icons.js'
+
     UIkit.use(Icons);
 
     UIkit.icon.add(CustomIcons);
+
+    UIkit.icon.add(LocalIcons.icons);
 
     window.UIkit = UIkit;
 
@@ -69,6 +73,41 @@
 
     window.csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+    // Función para mostrar el cargador
+    function showLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'flex';
+    }
+
+    // Función para ocultar el cargador
+    function hideLoader() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'none';
+    }
+
+    // Agregar un interceptor para las solicitudes
+    axios.interceptors.request.use(
+        function (config) {
+            showLoader(); // Mostrar el cargador cuando se realiza una solicitud
+            return config;
+        },
+        function (error) {
+            return Promise.reject(error);
+        }
+    );
+
+    // Agregar un interceptor para las respuestas
+    axios.interceptors.response.use(
+        function (response) {
+            hideLoader(); // Ocultar el cargador cuando se recibe una respuesta
+            return response;
+        },
+        function (error) {
+            hideLoader(); // Ocultar el cargador en caso de error también
+            return Promise.reject(error);
+        }
+    );
+
 // DAYJS
 
     import dayjs from 'dayjs'
@@ -93,6 +132,9 @@
     dayjs.locale(document.querySelector('html').getAttribute('lang'))
     dayjs.tz.setDefault('America/Mexico_City')
 
+// FLOWBITE
+
+    import 'flowbite';
 
 // VUE
 
@@ -121,6 +163,10 @@
 // Registro Global de componentes
     
     globalComponentRegistration(app);
+
+// Registro de directivas globales
+
+    globalDirectivesRegistration(app);
 
 // Vue Model
 
