@@ -46,13 +46,15 @@ class AppSetupCommand extends Command
 
         $this->replaceCssApp();
 
-        $this->addCssCustom();
-
         $this->replaceJsBootstrap();
 
         $this->addJsEnv();
 
         $this->addJsGlobalComponents();
+
+        $this->addJsGlobalDirectives();
+
+        $this->addJsIcons();
 
         $this->addJsMixin();
         
@@ -207,15 +209,6 @@ class AppSetupCommand extends Command
 
     }
 
-    private function addCssCustom()
-    {
-
-        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/css/custom.css.stub');
-
-        file_put_contents(base_path('resources/css/custom.css'), $viteConfig);
-
-    }
-
     // JS //
 
     private function replaceJsBootstrap()
@@ -242,6 +235,24 @@ class AppSetupCommand extends Command
         $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/global-components.js.stub');
 
         file_put_contents(base_path('resources/js/global-components.js'), $viteConfig);
+
+    }
+
+    private function addJsGlobalDirectives()
+    {
+
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/global-directives.js.stub');
+
+        file_put_contents(base_path('resources/js/global-directives.js'), $viteConfig);
+
+    }
+
+    private function addJsIcons()
+    {
+
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/icons.js.stub');
+
+        file_put_contents(base_path('resources/js/icons.js'), $viteConfig);
 
     }
 
