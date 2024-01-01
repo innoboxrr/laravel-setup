@@ -21,7 +21,7 @@ class AuthServiceProvider extends ServiceProvider
         $cacheKey = 'auth_policies';
 
         $policies = Cache::remember($cacheKey, now()->addDay(), function () {
-            return $this->registerPolicies();
+            return $this->getPolicies();
         });
 
         foreach ($policies as $model => $policy) {
@@ -34,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    protected function registerPolicies()
+    protected function getPolicies()
     {
         $policies = [];
         foreach (glob(__DIR__ . '/../Policies/*.php') as $file) {
