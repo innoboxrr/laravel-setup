@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Innoboxrr\LaravelAuth\Http\Requests\Auth\RegisterRequest;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+
+        // Deactivate wrapping for all resources
+        JsonResource::withoutWrapping();
+
+        // Define the custom rules for the register request
+        RegisterRequest::setCustomRulesCallback(function ($request) {
+            // Define tus reglas personalizadas aquí
+            return [
+                'email' => ['required', 'email', 'unique:users,email'],
+                'password' => ['required', 'min:8', 'confirmed'],
+                // Otras reglas personalizadas...
+            ];
+        });
+    }
+}

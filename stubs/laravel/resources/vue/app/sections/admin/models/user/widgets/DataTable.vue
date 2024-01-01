@@ -3,7 +3,9 @@
 	<data-table
 		title="User" 
 		:data-url="dataUrl"
+		data-method="get"
 		:policy-url="policyUrl"
+		policy-method="get"
 		:model="model"
 		:external-filters="userExternalFilters"
 		:form-filters="formFilters"
@@ -94,9 +96,9 @@
 
 			return {
 			
-				dataUrl: route('api.user.index'),
+				dataUrl: route(`${model.API_ROUTE_PREFIX}index`),
 
-				policyUrl: route('api.user.policies'),
+				policyUrl: route(`${model.API_ROUTE_PREFIX}policies`),
 
 				model: model,
 

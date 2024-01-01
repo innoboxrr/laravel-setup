@@ -1,36 +1,15 @@
 <template>
 
-	<div class="uk-section uk-section-xsmall">
-
-		<!-- Header -->
-		<div class="uk-container uk-container-expand">
+	<div class="flex justify-center items-center">
 			
-			<h3 class="uk-heading-divider">
-
-				<router-link :to="{name: 'AdminUsers'}">
-					
-					<i class="fas fa-arrow-circle-left"></i>
-
-				</router-link>
-
-				Edit
+		<div class="max-w-2xl w-full">
 			
-			</h3>
+			<div class="card bg-white dark:bg-slate-600 border rounded-lg px-8 pt-6 pb-8 mb-4 dark:border-slate-800">
 
-		</div>
-
-		<div class="uk-section">
-			
-			<div class="uk-container uk-container-small ">
-				
-				<div class="uk-card uk-card-default uk-card-body">
-
-					<edit-form 
-						:key="$route.params.id"
-						:user-id="$route.params.id"
-						@submit="formSubmit"/>
-
-				</div>
+				<edit-form 
+					:key="$route.params.id"
+					:user-id="$route.params.id"
+					@submit="formSubmit"/>
 
 			</div>
 
@@ -42,6 +21,7 @@
 
 <script>
 
+	import { getPolicy } from '@models/user'
 	import EditForm from '@models/user/forms/EditForm.vue'
 
 	export default {
@@ -60,55 +40,19 @@
 
 		},
 
-		data() {
-		
-			return {
-
-				fetchEditPolicyAttempts: 0,
-
-			}
-		
-		},
-
 		methods: {
 
 			fetchEditPolicy() {
 
-				axios.post(route('api.user.policy'), {
+				getPolicy('update', this.$route.params.id).then( res => {
 
-					_token: csrf_token,
+					if(!res.data.update) {
 
-					id: this.$route.params.id,
-
-					policy: 'update'
-
-				}).then( res => {
-
-					this.fetchEditPolicyAttempts = 0;
-
-					this.policy = res.data;
-
-					if(!this.policy.update) {
-
-						this.$router.push({name: "NotAuthorized" });
+						// this.$router.push({name: "NotAuthorized" });
 						
 					}
 
-				}).catch( error => {
-
-					if(this.fetchEditPolicyAttempts <= 3) {
-
-	                    setTimeout( () => {
-
-	                    	++this.fetchEditPolicyAttempts;
-
-	                        this.fetchEditPolicy();
-
-	                    }, 1500);
-
-	                }
-
-				});
+                });
 
 			},
 
@@ -122,7 +66,7 @@
 
 					params: { 
 
-						id: payload.res.data.id 
+						id: payload.data.id 
 
 					} 
 

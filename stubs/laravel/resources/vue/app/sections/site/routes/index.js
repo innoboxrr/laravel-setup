@@ -9,7 +9,7 @@ export default [
 		name: "Site",
 		component: () => import(/* webpackChunkName: "SiteLayout"*/ "./../layouts/default/SiteLayout.vue"),
 		meta: {
-			title: "Sitio",
+			title: "Inicio",
 		},
 		children: [
 

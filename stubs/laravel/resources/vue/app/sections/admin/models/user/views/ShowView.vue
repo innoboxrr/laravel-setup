@@ -1,28 +1,46 @@
 <template>
 
-	<div class="uk-section uk-section-xsmall">
+	<div v-if="dataLoaded">
 
-		<!-- Header -->
-		<div v-if="dataLoaded" class="uk-container uk-container-expand">
+		<breadcrumb-component :items="items" />
+	    
+		<div class="mt-4">
 
-			<h3 class="uk-heading-divider">
+			<div class="uk-container uk-container-expand">
 
-				<router-link :to="{name: 'AdminUsers'}">
+				<div class="uk-grid-small" uk-grid>
 					
-					<i class="fas fa-arrow-circle-left"></i>
+					<div class="uk-width-1-3@m uk-width-1-1@s">
 
-				</router-link>
+						<div class="sticky top-20">
 
-				ID: {{ user.id }}
-			
-			</h3>
+							<model-card 	
+								:user="user" />
 
-		</div>
+						</div>
 
-		<!-- Body -->
-		<div v-if="dataLoaded" class="uk-section uk-section-small">
-			
-			<!-- Add specific view content -->
+					</div>
+
+					<div class="uk-width-expand uk-width-1-2@m uk-width-1-1@s">
+
+						<div v-if="this.isShowView">
+
+							<model-profile 
+								:user="user" />
+							
+						</div>
+
+						<div v-else>
+							
+							<router-view @updateData="fetchData"></router-view>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
 
 		</div>
 
@@ -32,7 +50,19 @@
 
 <script>
 
+	import { showModel } from '@models/user'
+	import ModelCard from '@models/user/widgets/ModelCard.vue'
+	import ModelProfile from '@models/user/widgets/ModelProfile.vue'
+
 	export default {
+
+		components: {
+
+			ModelCard,
+
+			ModelProfile
+
+		},
 
 		mounted() {
 
@@ -48,12 +78,51 @@
 
 				title: undefined,
 
-				user: {},
+				userId: this.$route.params.id,
 
-				fetchUserAttempt: 0
+				user: {},
 
 			}
 		
+		},
+
+		computed: {
+
+			isShowView() {
+
+				return (this.$route.name == 'AdminShowUser');
+
+			},
+
+			items() {
+
+				if(this.$route.name == 'AdminShowUser') {
+
+					return [
+						{ text: 'Usuarios', path: '/admin/user'},
+						{ text: this.user.name ?? 'Usuario', path: '/admin/user/' + this.user.id}
+					];
+
+				} else if(this.$route.name == 'AdminEditUser') {
+
+					return [
+						{ text: 'Usuarios', path: '/admin/user'},
+						{ text: this.user.name ?? 'Usuario' , path: '/admin/user/' + this.user.id},
+						{ text: 'Editar', path: '/admin/user/' + this.user.id + '/edit'}	
+					];
+
+				} else if(this.$route.name == 'AdminRoleAssignmentUser') {
+
+					return [
+						{ text: 'Usuarios', path: '/admin/user'},
+						{ text: this.user.name ?? 'Usuario' , path: '/admin/user/' + this.user.id},
+						{ text: 'Asignar rol', path: '/admin/user/' + this.user.id + '/role-assignment'}	
+					];
+
+				}
+
+			}
+
 		},
 
 		methods: {
@@ -74,29 +143,21 @@
 
 			fetchUser() {
 
-                model.getModel(this.userId)
-                    .then( res => {
+				return new Promise((resolve, reject) => {
 
-                        this.fetchUserAttempts;
+					showModel(this.userId).then( res => {
 
-                        this.user = res.data;
+	                    this.user = res.data;
 
-                    })
-                    .catch( error => {
+	                    resolve(res);
 
-                        if(this.fetchUserAttempts <= 3) {
+	                }).catch( error => {
 
-                            setTimeout( () => {
+	                    reject(error);
 
-                                ++this.fetchUserAttempts;
+	                });
 
-                                this.fetchUser();
-
-                            }, 1500);
-
-                        }
-
-                    });
+				});
 
             },
 

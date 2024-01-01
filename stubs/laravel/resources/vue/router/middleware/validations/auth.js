@@ -1,15 +1,19 @@
+import isAuth from '../utils/isAuth.js'
+
 export default function auth( { next } ) {
 
 	// Si el usuario NO está identificado
-    if (vm.$store.getters['user/isAuth']) {
+    if (isAuth()) {
     	
     	return next();
 
     } else {
 
         // window.location.href = route.name('login');
-        
-        window.location.href = '/';
+
+        let redirectUrl = encodeURIComponent(location.href);
+
+        window.location.href = '/auth/login?redirect=' + redirectUrl;
 
     }
 

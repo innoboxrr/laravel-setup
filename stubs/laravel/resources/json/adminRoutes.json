@@ -1,0 +1,8 @@
+{
+	"adminRoutes": [
+		{
+			"title": "User",
+			"name": "AdminUsers"
+		}
+	]
+}

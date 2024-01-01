@@ -57,8 +57,12 @@ class AppSetupCommand extends Command
         $this->addJsIcons();
 
         $this->addJsMixin();
+
+        $this->addJsUtils();
         
         $this->addJsonNav();
+
+        $this->addJsonAdminRoutes();
         
         $this->deleteWelcomeBladeFile();
         
@@ -67,6 +71,8 @@ class AppSetupCommand extends Command
         $this->copyVueDir();
         
         $this->replaceWebRoutesFile();
+
+        $this->replaceProvidersFiles();
 
         $this->info('¡La configuración se ha completado con éxito!'); 
        
@@ -182,6 +188,8 @@ class AppSetupCommand extends Command
 
         $editor->addParameter('require.innoboxrr/search-surge', '^2.0');
 
+        $editor->addParameter('require.innoboxrr/laravel-audit', '^1.0');
+
         $editor->addParameter('require.innoboxrr/traits', '^1.0');
 
         $editor->addParameter('require.maatwebsite/excel', '^3.1'); // Excel
@@ -265,6 +273,15 @@ class AppSetupCommand extends Command
 
     }
 
+    private function addJsUtils()
+    {
+
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/utils.js.stub');
+
+        file_put_contents(base_path('resources/js/utils.js'), $viteConfig);
+
+    }
+
     // JSON //
 
     private function addJsonNav()
@@ -275,6 +292,17 @@ class AppSetupCommand extends Command
         $this->mkDir(base_path('resources/json'));
 
         file_put_contents(base_path('resources/json/nav.json'), $viteConfig);
+
+    }
+
+    private function addJsonAdminRoutes()
+    {
+
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/json/adminRoutes.json.stub');
+
+        $this->mkDir(base_path('resources/json'));
+
+        file_put_contents(base_path('resources/json/adminRoutes.json'), $viteConfig);
 
     }
 
@@ -302,6 +330,7 @@ class AppSetupCommand extends Command
     }
 
     // VUE // 
+
     private function copyVueDir()
     {   
 
@@ -322,6 +351,21 @@ class AppSetupCommand extends Command
 
         file_put_contents(base_path('routes/web.php'), $webRoutesFile);
 
+    }
+
+    // PROVIDERS
+    private function replaceProvidersFiles()
+    {
+            
+        $appServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AppServiceProvider.php.stub');
+        $authServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AuthServiceProvider.php.stub');
+        $eventServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/EventServiceProvider.php.stub');
+        $broadcastServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/BroadcastServiceProvider.php.stub');
+    
+        file_put_contents(base_path('app/Providers/AppServiceProvider.php'), $appServiceProvider);
+        file_put_contents(base_path('app/Providers/AuthServiceProvider.php'), $authServiceProvider);
+        file_put_contents(base_path('app/Providers/EventServiceProvider.php'), $eventServiceProvider);
+        file_put_contents(base_path('app/Providers/BroadcastServiceProvider.php'), $broadcastServiceProvider);
     }
 
     //////////////////////////////////////////////////////////////////

@@ -7,10 +7,11 @@
 			<div>
 				
 				<text-input-component
+					:custom-class="inputClass"
 					type="text"
 					name="id"
 					label="ID"
-					placeholder="ID" 
+					placeholder="ID"  
 					v-model="id" />
 
 			</div>
@@ -23,7 +24,7 @@
 			
 			<div>
 						
-				<button class="uk-button button">
+				<button :class="buttonClass">
 			
 					Buscar
 
@@ -34,7 +35,7 @@
 			<div>
 
 				<button 
-					class="uk-button button"
+					:class="buttonClass + ' bg-gray-400'"
 					@click.prevent="resetForm()">
 			
 					Reiniciar

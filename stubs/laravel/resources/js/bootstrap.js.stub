@@ -70,25 +70,28 @@
     window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     
     axios.defaults.withCredentials = true;
+    axios.defaults.withXSRFToken = true;
 
     window.csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Función para mostrar el cargador
-    function showLoader() {
-        const loader = document.getElementById('loader');
-        loader.style.display = 'flex';
-    }
-
-    // Función para ocultar el cargador
-    function hideLoader() {
-        const loader = document.getElementById('loader');
-        loader.style.display = 'none';
-    }
+    import { showLoader, hideLoader } from '@js/utils.js';
 
     // Agregar un interceptor para las solicitudes
     axios.interceptors.request.use(
         function (config) {
-            showLoader(); // Mostrar el cargador cuando se realiza una solicitud
+
+            const url = new URL(config.url, window.location.origin);
+            const loaderParam = url.searchParams.get("loader");
+
+            // Convert values to booleans for consistent comparison
+            const isLoaderParamFalse = loaderParam === 'false';
+            const isConfigLoaderFalse = config.params?.loader === false;
+
+            // Show the loader only if both values are not false
+            if (!isLoaderParamFalse && !isConfigLoaderFalse) {
+                showLoader(); // Show the loader when a request is made
+            }
+                
             return config;
         },
         function (error) {
@@ -107,6 +110,13 @@
             return Promise.reject(error);
         }
     );
+
+// INNOBOXRR HTTP REQUEST
+    
+    // En tu archivo principal, como index.js
+    import { makeHttpRequest } from 'innoboxrr-http-request';
+
+    window.makeHttpRequest = makeHttpRequest;
 
 // DAYJS
 
@@ -148,7 +158,11 @@
 
     import mixin from '@js/mixin.js'
 
+    import { VueHttpRequestPlugin } from 'innoboxrr-http-request'
+
     import { globalComponentRegistration } from '@js/global-components.js'
+
+    import { globalDirectivesRegistration } from '@js/global-directives.js'
 
 // Vue App
 
@@ -159,6 +173,8 @@
     app.use(vuex);
 
     app.mixin(mixin);
+
+    app.use(VueHttpRequestPlugin);
 
 // Registro Global de componentes
     

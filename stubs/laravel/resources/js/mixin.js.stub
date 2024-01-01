@@ -1,7 +1,10 @@
 import dayjs from 'dayjs'
 import lang from 'innoboxrr-i18n'
-import { replaceWord, strlimit } from 'innoboxrr-js-libs/libs/string.js'
+import { replaceWord, strlimit, slugify, removeTags, decodeEntities } from 'innoboxrr-js-libs/libs/string.js'
 import { numberFormat } from 'innoboxrr-js-libs/libs/number.js'
+import { formatSeconds } from 'innoboxrr-js-libs/libs/time.js'
+import { showLoader, hideLoader } from '@js/utils.js';
+import { APP_VARS } from '@js/env.js'
 
 export default {
 
@@ -9,7 +12,9 @@ export default {
 
 		return {
 
-			// 
+			...APP_VARS,
+
+			showJsons: true, // Enable only for dev 
 
 		}
 
@@ -57,15 +62,16 @@ export default {
 					icon: 'success',
 				}, 
 				'none': object,
+				'custom': object,
 			});
 
 			Swal.fire({
 				...data,
-			 	toast: true,
-			 	position: 'top-end',
-			  	showConfirmButton: false,
-				timer: 1500,
-				timerProgressBar: true,
+			 	toast: object.toast ?? true,
+			 	position: object.position ?? 'top-end',
+			  	showConfirmButton: object.showConfirmButton ?? false,
+				timer: object.timer ?? 1500,
+				timerProgressBar: object.timerProgressBar ?? true,
 			});
 
 		},
@@ -140,7 +146,19 @@ export default {
 
 		strlimit(str, length = 45) {
 
-			return strlimit(str, length);
+			return strlimit(removeTags(decodeEntities(str)), length);
+
+		},
+
+		slugify(str) {
+
+			return slugify(str);
+
+		},
+
+		removeTags(str) {
+			
+			return removeTags(str);
 
 		},
 
@@ -181,6 +199,38 @@ export default {
 			return numberFormat(amount, decimals);
 
 		},
+
+		showLoader() {
+
+			hideLoader('loader');
+			
+			showLoader('app-loader');
+
+		},
+
+		hideLoader() {
+			
+			hideLoader('app-loader');
+
+		},
+
+		sleep(time = 1000) {
+
+			this.showLoader();
+
+			setTimeout(() => {
+
+				this.hideLoader();
+
+			}, time);
+
+		},
+
+		formatSeconds(seconds) {
+
+			return formatSeconds(seconds);
+
+		}
 
 	}
 

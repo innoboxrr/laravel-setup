@@ -1,12 +1,12 @@
+import isAuth from '../utils/isAuth.js'
+
 export default function guest( { next } ) {
 
 	// Si el usuario está identificado
-    if (vm.$store.getters['user/isAuth']) {
+    if (isAuth()) {
     	
     	// Enviarlo al Dashboard
-        return next({	
-            name: 'AdminDashboard'
-        });
+        window.location.href = '/admin';
 
     } else {
 

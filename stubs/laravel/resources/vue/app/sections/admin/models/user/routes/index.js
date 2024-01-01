@@ -4,9 +4,9 @@ export default [
 	{
 		path: 'user',
 		name: "AdminUsers",
-		component: () => import (/* webpackChunkName: "AdminUsers"*/ "./../views/AdminView.vue"),
+		component: () => import ("./../views/AdminView.vue"),
 		meta: {
-			title: 'Panel de administración',
+			title: 'Users',
 			middleware: [
 				middleware.auth
 			]
@@ -15,35 +15,37 @@ export default [
 			{
 				path: 'create',
 				name: "AdminCreateUser",
-				component: () => import (/* webpackChunkName: "CreateUser"*/ "./../views/CreateView.vue"),
+				component: () => import ("./../views/CreateView.vue"),
 				meta: {
-					title: 'Crear',
+					title: 'Crear Users',
 					middleware: [
 						middleware.auth
 					]
 				}
 			},
 			{
-				path: ':id/show',
+				path: ':id',
 				name: "AdminShowUser",
-				component: () => import (/* webpackChunkName: "ShowUser"*/ "./../views/ShowView.vue"),
+				component: () => import ("./../views/ShowView.vue"),
 				meta: {
-					title: undefined,
+					title: 'Ver Users',
 					middleware: [
 						middleware.auth
 					]
-				}
-			},
-			{
-				path: ':id/edit',
-				name: "AdminEditUser",
-				component: () => import (/* webpackChunkName: "EditUser"*/ "./../views/EditView.vue"),
-				meta: {
-					title: 'Editar',
-					middleware: [
-						middleware.auth
-					]
-				}
+				},
+				children: [
+					{
+						path: 'edit',
+						name: "AdminEditUser",
+						component: () => import ("./../views/EditView.vue"),
+						meta: {
+							title: 'Editar Users',
+							middleware: [
+								middleware.auth
+							]
+						}
+					}
+				]
 			},
 		]
 	},

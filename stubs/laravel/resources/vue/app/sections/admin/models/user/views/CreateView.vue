@@ -1,29 +1,19 @@
 <template>
 
-	<div class="uk-section uk-section-xsmall">
+	<div>
 
-		<!-- Header -->
-		<div class="uk-container uk-container-expand">
-			
-			<h3 class="uk-heading-divider">
+		<breadcrumb-component :items="[
+			{ text: 'Usuarios', path: '/admin/user'},
+			{ text: 'Crear usuario', path: '/admin/user/create'}
+		]" />
 
-				<router-link :to="{name: 'AdminUsers'}">
-					
-					<i class="fas fa-arrow-circle-left"></i>
-
-				</router-link>
-
-				Create
-			
-			</h3>
-
-		</div>
-
-		<div class="uk-section">
-			
-			<div class="uk-container uk-container-small ">
+		<div class="flex justify-center items-center mt-8">
 				
-				<div class="uk-card uk-card-default uk-card-body">
+			<div class="max-w-2xl w-full">
+				
+				<div class="card bg-white dark:bg-slate-600 border rounded-lg px-8 pt-6 pb-8 mb-4 dark:border-slate-800">
+
+					<h2 class="text-4xl font-bold dark:text-white mb-6">Crear usuario</h2>
 					
 					<create-form 
 						@submit="formSubmit"/>
@@ -40,6 +30,7 @@
 
 <script>
 
+	import { getPolicy } from '@models/user'
 	import CreateForm from '@models/user/forms/CreateForm.vue'
 
 	export default {
@@ -58,51 +49,19 @@
 
 		},
 
-		data() {
-		
-			return {
-
-				fetchCreatePolicyAttempts: 0,
-
-			}
-		
-		},
-
 		methods: {
 
 			fetchCreatePolicy() {
 
-				axios.post(route('api.user.policy'), {
-
-					_token: csrf_token,
-
-					policy: 'create'
-
-				}).then( res => {
-
-					this.fetchCreatePolicyAttempts = 0;
+				getPolicy('create').then( res => {
 
 					if(!res.data.create) {
 
-						this.$router.push({name: "NotAuthorized" });
+						// this.$router.push({name: "NotAuthorized" });
 						
 					}
 
-				}).catch( error => {
-
-					if(this.fetchCreatePolicyAttempts <= 3) {
-
-	                    setTimeout( () => {
-
-	                    	++this.fetchCreatePolicyAttempts;
-	                    	
-	                        this.fetchCreatePolicy();
-
-	                    }, 1500);
-
-	                }
-
-				});
+                });
 
 			},
 
@@ -116,7 +75,7 @@
 
 					params: { 
 
-						id: payload.res.data.id 
+						id: payload.data.id 
 
 					} 
 

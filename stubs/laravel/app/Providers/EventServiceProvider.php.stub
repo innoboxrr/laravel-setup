@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
+
+class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * The event to listener mappings for the application.
+     *
+     * @var array<class-string, array<int, class-string>>
+     */
+    protected $listen = [
+        Registered::class => [
+            SendEmailVerificationNotification::class,
+        ],
+    ];
+
+    /**
+     * Register any events for your application.
+     */
+    public function boot(): void
+    {
+        if (app()->environment('production') && cache()->has('app_events_and_observers')) {
+            $data = cache()->get('app_events_and_observers');
+            $this->registerFromCache($data);
+        } else {
+            $events = $this->registerModelEvents();
+            $observers = $this->registerModelObservers();
+            cache()->forever('app_events_and_observers', ['events' => $events, 'observers' => $observers]);
+        }
+    }
+
+    private function registerFromCache($data)
+    {
+        foreach ($data['events'] as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                Event::listen($event, $listener);
+            }
+        }
+
+        foreach ($data['observers'] as $model => $observer) {
+            $model::observe($observer);
+        }
+    }
+
+    private function registerModelEvents()
+    {
+        $eventsToRegister = [];
+
+        $basePath = realpath(__DIR__ . '/../Http/Events');
+        $namespace = 'App\Http\Events\\';
+        $models = glob("{$basePath}/*", GLOB_ONLYDIR);
+
+        foreach ($models as $modelPath) {
+            $model = basename($modelPath);
+            $events = glob("{$modelPath}/Events/*.php", GLOB_BRACE);
+
+            foreach ($events as $eventPath) {
+                $eventName = pathinfo($eventPath, PATHINFO_FILENAME);
+                $listeners = glob("{$modelPath}/Listeners/{$eventName}/*.php", GLOB_BRACE);
+
+                foreach ($listeners as $listenerPath) {
+                    $listenerName = pathinfo($listenerPath, PATHINFO_FILENAME);
+                    $event = "{$namespace}{$model}\\Events\\{$eventName}";
+                    $listener = "{$namespace}{$model}\\Listeners\\{$eventName}\\{$listenerName}";
+
+                    $eventsToRegister[$event][] = $listener;
+
+                    Event::listen($event, $listener);
+                }
+            }
+        }
+
+        return $eventsToRegister;
+    }
+
+    private function registerModelObservers()
+    {
+        $observersToRegister = [];
+
+        $modelsPath = realpath(__DIR__ . '/../Models');
+        $observersPath = realpath(__DIR__ . '/../Observers');
+        $modelFiles = glob("{$modelsPath}/*.php");
+
+        foreach ($modelFiles as $modelFilePath) {
+            $modelName = pathinfo($modelFilePath, PATHINFO_FILENAME);
+            $observerFilePath = "{$observersPath}/{$modelName}Observer.php";
+
+            if (file_exists($observerFilePath)) {
+                $modelClass = "App\\Models\\{$modelName}";
+                $observerClass = "App\\Observers\\{$modelName}Observer";
+
+                if (class_exists($modelClass) && class_exists($observerClass)) {
+                    $observersToRegister[$modelClass] = $observerClass;
+                    $modelClass::observe($observerClass);
+                }
+            }
+        }
+
+        return $observersToRegister;
+    }
+
+    /**
+     * Determine if events and listeners should be automatically discovered.
+     */
+    public function shouldDiscoverEvents(): bool
+    {
+        return false;
+    }
+}

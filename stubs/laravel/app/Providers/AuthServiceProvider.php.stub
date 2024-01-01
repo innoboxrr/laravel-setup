@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Providers;
+
+// use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    /**
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        //
+    ];
+
+    /**
+     * Register any authentication / authorization services.
+     */
+    public function boot(): void 
+    {
+        if (app()->environment('production') && cache()->has('policies_mapping')) {
+            $policies = cache()->get('policies_mapping');
+            $this->registerFromCache($policies);
+        } else {
+            $policies = $this->mapPolicies();
+            cache()->forever('policies_mapping', $policies);
+        }
+    }
+
+    public function registerFromCache($policies)
+    {
+        foreach ($policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
+    }
+
+    public function mapPolicies()
+    {
+        $policiesToRegister = [];
+
+        foreach (glob(__DIR__ . '/../Policies/*.php') as $file) {
+            $policy = 'App\Policies\\' . substr(basename($file), 0, -4);
+            $model = 'App\Models\\' . str_replace('Policy', '', $policy);
+
+            if (class_exists($model) && class_exists($policy)) {
+                $policiesToRegister[$model] = $policy;
+                Gate::policy($model, $policy);
+            }
+        }
+
+        return $policiesToRegister;
+    }
+}

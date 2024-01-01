@@ -6,7 +6,7 @@ export default {
 
 		return {
 
-			roles: [],
+			//
 
 		}
 
@@ -14,19 +14,7 @@ export default {
 
 	getters: {
 
-		isAuth(state) {
-
-			let metaUsr = document.querySelector("meta[name='usr']").getAttribute("content");
-
-			return (metaUsr != "" || state.auth) ? true : false
-
-		},
-
-		getRoles(state) {
-
-			return state.roles;
-
-		}
+		//
 
 	},
 
@@ -38,11 +26,7 @@ export default {
 
 	actions: {
 
-		hasRole({state}, role) {
-
-			return state.roles.includes('role');
-
-		}
+		//
 
 	}
 

@@ -1,3 +1,5 @@
+import { data } from "autoprefixer";
+
 export const API_ROUTE_PREFIX = 'api.user.'; // Reemplaza con la ruta adecuada
 
 export const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Reemplaza con el token adecuado
@@ -91,6 +93,28 @@ export const dataTableHead = () => {
 			sortable: true,
 			html: false,
 		},
+		{
+			id: 'name',
+			value: 'Nombre',
+			sortable: true,
+			html: false,
+			parser: (value) => {
+
+				return value;
+
+			}
+		},
+		{
+			id: 'email',
+			value: 'Correo',
+			sortable: true,
+			html: false,
+			parser: (value) => {
+
+				return value;
+
+			}
+		},
 		/*
 		{
 			id: 'column',
@@ -110,6 +134,8 @@ export const dataTableHead = () => {
 export const dataTableSort = () => {
 	return {
 		id: 'asc',
+		name: 'asc',
+		email: 'asc',
 		// Añadir columnas ordenables
 	};
 };
@@ -378,6 +404,127 @@ export const exportModel = (data) => {
 					Swal.fire(t('Operation canceled'), t('The operation has been canceled'), 'error');
 				}
 			});
+		};
+
+		makeRequest(0);
+	});
+};
+
+export const updatePassword = (modelId, data = {}) => {
+	return new Promise((resolve, reject) => {
+		const maxRetries = 0;
+		const retryInterval = 1500;
+
+		const makeRequest = (retryCount) => {
+			axios
+				.post(route(API_ROUTE_PREFIX + 'export'), {
+					_token: CSRF_TOKEN,
+					...data,
+					user_id: modelId,
+				})
+				.then((res) => {
+					resolve(res);
+				})
+				.catch((error) => {
+					if (retryCount < maxRetries) {
+						setTimeout(() => {
+							makeRequest(retryCount + 1);
+						}, retryInterval);
+					} else {
+						reject(error); 
+					}
+				});
+		};
+
+		makeRequest(0);
+	});
+};
+
+export const assignRole = (modelId, data) => {
+	return new Promise((resolve, reject) => {
+		const maxRetries = 1;
+		const retryInterval = 1500;
+
+		const makeRequest = (retryCount) => {
+			axios
+				.post(route(API_ROUTE_PREFIX + 'assign.role'), {
+					_token: CSRF_TOKEN,
+					...data,
+					user_id: modelId,
+				})
+				.then((res) => {
+					resolve(res);
+				})
+				.catch((error) => {
+					if (retryCount < maxRetries) {
+						setTimeout(() => {
+							makeRequest(retryCount + 1);
+						}, retryInterval);
+					} else {
+						reject(error); // Mensaje de error más descriptivo
+					}
+				});
+		};
+
+		makeRequest(0);
+	});
+};
+
+export const deallocateRole = (modelId, data) => {
+	return new Promise((resolve, reject) => {
+		const maxRetries = 1;
+		const retryInterval = 1500;
+
+		const makeRequest = (retryCount) => {
+			axios
+				.post(route(API_ROUTE_PREFIX + 'deallocate.role'), {
+					_token: CSRF_TOKEN,
+					...data,
+					user_id: modelId,
+				})
+				.then((res) => {
+					resolve(res);
+				})
+				.catch((error) => {
+					if (retryCount < maxRetries) {
+						setTimeout(() => {
+							makeRequest(retryCount + 1);
+						}, retryInterval);
+					} else {
+						reject(error); // Mensaje de error más descriptivo
+					}
+				});
+		};
+
+		makeRequest(0);
+	});
+};
+
+export const impersonate = (data) => {
+	return new Promise((resolve, reject) => {
+		const maxRetries = 1;
+		const retryInterval = 1500;
+
+		const makeRequest = (retryCount) => {
+			axios
+				.post(route('auth.impersonate'), {
+					_token: CSRF_TOKEN,
+					target_user_id: data.id,
+				})
+				.then(async (res) => {
+
+					location.href = route('auth.impersonate.token', res.data.token);
+
+				})
+				.catch((error) => {
+					if (retryCount < maxRetries) {
+						setTimeout(() => {
+							makeRequest(retryCount + 1);
+						}, retryInterval);
+					} else {
+						reject(error); // Mensaje de error más descriptivo
+					}
+				});
 		};
 
 		makeRequest(0);

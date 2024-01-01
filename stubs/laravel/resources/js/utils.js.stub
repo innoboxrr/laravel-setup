@@ -1,0 +1,9 @@
+export const showLoader = (id = 'loader') => {
+    const loader = document.getElementById(id);
+    loader.style.display = 'flex';
+}
+
+export const  hideLoader = (id = 'loader') => {
+    const loader = document.getElementById(id);
+    loader.style.display = 'none';
+}

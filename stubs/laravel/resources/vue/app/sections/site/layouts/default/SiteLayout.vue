@@ -12,8 +12,6 @@
         
         <the-footer />
         
-        <the-offcanvas />
-        
     </div>
 
 </template>
@@ -22,7 +20,6 @@
     
     import TheHeader from './TheHeader.vue'
     import TheFooter from './TheFooter.vue'
-    import TheOffcanvas from './TheOffcanvas.vue'
 
     export default {
 
@@ -31,8 +28,6 @@
             TheHeader,
 
             TheFooter,
-
-            TheOffcanvas,
 
         }
 
