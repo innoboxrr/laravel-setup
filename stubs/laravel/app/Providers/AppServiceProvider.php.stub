@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Innoboxrr\LaravelAuth\Http\Requests\Auth\RegisterRequest;
+// use Innoboxrr\LaravelAuth\Http\Requests\Auth\RegisterRequest;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
 
         // Define the custom rules for the register request
+        /*
         RegisterRequest::setCustomRulesCallback(function ($request) {
             // Define tus reglas personalizadas aquí
             return [
@@ -34,5 +35,6 @@ class AppServiceProvider extends ServiceProvider
                 // Otras reglas personalizadas...
             ];
         });
+        */
     }
 }
