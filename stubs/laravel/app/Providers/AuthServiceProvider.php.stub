@@ -13,15 +13,15 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void 
     {
-        $this->registerPolicies();
+        $this->policiesRegistration();
     }
 
-    private function registerPolicies()
+    private function policiesRegistration()
     {
         $cacheKey = 'auth_policies';
 
         $policies = Cache::remember($cacheKey, now()->addDay(), function () {
-            return $this->discoverPolicies();
+            return $this->registerPolicies();
         });
 
         foreach ($policies as $model => $policy) {
@@ -34,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    protected function discoverPolicies()
+    protected function registerPolicies()
     {
         $policies = [];
         foreach (glob(__DIR__ . '/../Policies/*.php') as $file) {
