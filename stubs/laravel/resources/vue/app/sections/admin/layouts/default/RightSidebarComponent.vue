@@ -9,8 +9,8 @@
                 <!-- Chat: Chat with other students-->
                 <li>
                     
-                    <router-link 
-                        path="/chat"
+                    <a 
+                        href="/chat"
                         data-tooltip-target="tooltip-chat" 
                         data-tooltip-placement="left" 
                         class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -22,7 +22,7 @@
 
                         <span class="sr-only"></span>
 
-                    </router-link>
+                    </a>
 
                     <div 
                         id="tooltip-chat" 
@@ -38,8 +38,8 @@
                 <!-- Calendar: Assignments, Quiz and Course Calendar-->
                 <li>
 
-                    <router-link
-                        path="/calendar" 
+                    <a
+                        href="/calendar" 
                         data-tooltip-target="tooltip-calendar"
                         data-tooltip-placement="left" 
                         class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -50,7 +50,7 @@
 
                         <span class="sr-only"></span>
 
-                    </router-link>
+                    </a>
 
                     <div 
                         id="tooltip-calendar" 
@@ -66,8 +66,8 @@
                 <!-- Groups -->
                 <li>
                     
-                    <router-link 
-                        path="/groups"
+                    <a 
+                        href="/groups"
                         data-tooltip-target="tooltip-groups" 
                         data-tooltip-placement="left" 
                         class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -78,7 +78,7 @@
                         
                         <span class="sr-only"></span>
 
-                    </router-link>
+                    </a>
                     
                     <div 
                         id="tooltip-groups" 
@@ -94,8 +94,8 @@
                 <!-- Cursos -->
                 <li>
                     
-                    <router-link 
-                        path="/courses"
+                    <a 
+                        href="/courses"
                         data-tooltip-target="tooltip-courses" 
                         data-tooltip-placement="left" 
                         class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:no-underline">
@@ -104,7 +104,7 @@
                         
                         <span class="sr-only"></span>
 
-                    </router-link>
+                    </a>
                     
                     <div 
                         id="tooltip-courses" 
@@ -124,7 +124,7 @@
                 <!-- Estadísticas -->
                 <li>
                     
-                    <router-link 
+                    <a 
                         pth="/reports"
                         data-tooltip-target="tooltip-reports" 
                         data-tooltip-placement="left" 
@@ -136,7 +136,7 @@
                         
                         <span class="sr-only"></span>
 
-                    </router-link>
+                    </a>
                     
                     <div 
                         id="tooltip-reports" 
@@ -152,8 +152,8 @@
                 <!-- Construir curso -->
                 <li>
                     
-                    <router-link 
-                        path="/create"
+                    <a 
+                        href="/create"
                         data-tooltip-target="tooltip-add-course" 
                         data-tooltip-placement="left" 
                         class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -164,7 +164,7 @@
                         
                         <span class="sr-only"></span>
 
-                    </router-link>
+                    </a>
                     
                     <div 
                         id="tooltip-add-course" 
