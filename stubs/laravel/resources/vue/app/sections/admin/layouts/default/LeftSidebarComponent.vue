@@ -12,7 +12,7 @@
                 <div class="flex mx-3">
                 
                     <img 
-                        src="@app/assets/images/logos/main.png" 
+                        src="#" 
                         class="w-40 py-4"
                         alt="Orlab 2.0">
                 

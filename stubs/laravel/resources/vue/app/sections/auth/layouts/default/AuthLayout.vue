@@ -15,7 +15,7 @@
                             :to="{name: 'Home'}"
                             class="hover:no-underline hover:text-app-color">
                             <div class="flex mx-3">
-                                <img src="@app/assets/images/logos/tec.png" class="w-40">
+                                <img src="#" class="w-40">
                             </div>
                         </router-link>
                     </h2>
