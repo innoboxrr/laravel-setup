@@ -84,7 +84,7 @@
 
 				showModel(this.userId).then( res => {
 
-					this.user = res.data;
+					this.user = res;
 
 					this.dataLoaded = true;
 

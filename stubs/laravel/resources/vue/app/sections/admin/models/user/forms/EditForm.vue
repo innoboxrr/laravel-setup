@@ -105,7 +105,7 @@
         methods: {
             fetchUser() {
                 showModel(this.userId).then(res => {
-                    this.user = res.data;
+                    this.user = res;
                     // Aquí se mapean los campos adicionales
                     if (!this.user.payload) {
                         this.user.payload = {
