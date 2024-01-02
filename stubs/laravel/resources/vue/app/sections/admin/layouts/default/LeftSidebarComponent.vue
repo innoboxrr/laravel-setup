@@ -26,7 +26,7 @@
                 
                     <router-link 
                         :to="{
-                            name: 'Dashboard'
+                            path: 'Dashboard'
                         }"
                         class="flex items-center p-2 text-base font-medium text-white rounded-lg dark:text-white hover:no-underline hover:bg-blue-700 hover:text-white dark:hover:bg-gray-700 group">
                 
@@ -59,7 +59,7 @@
                         <li>
                             <router-link 
                                 :to="{
-                                    name: 'TeacherDashboard'
+                                    path: 'TeacherDashboard'
                                 }" 
                                 class="flex items-center p-2 pl-11 w-full text-base font-medium text-white rounded-lg transition duration-75 group hover:no-underline hover:bg-blue-700 hover:text-white dark:text-white dark:hover:bg-gray-700">
                                 Panel de control
@@ -68,7 +68,7 @@
                         <li>
                             <router-link
                                 :to="{
-                                    name: 'TeacherStudents'
+                                    path: 'TeacherStudents'
                                 }"
                                 class="flex items-center p-2 pl-11 w-full text-base font-medium text-white rounded-lg transition duration-75 group hover:no-underline hover:bg-blue-700 hover:text-white dark:text-white dark:hover:bg-gray-700">
                                 Mis Alumnos
@@ -77,7 +77,7 @@
                         <li>
                             <router-link
                                 :to="{
-                                    name: 'TeacherCourses'
+                                    path: 'TeacherCourses'
                                 }"
                                 class="flex items-center p-2 pl-11 w-full text-base font-medium text-white rounded-lg transition duration-75 group hover:no-underline hover:bg-blue-700 hover:text-white dark:text-white dark:hover:bg-gray-700">
                                 Mis Cursos
@@ -109,7 +109,7 @@
                         <li>
                             <router-link 
                                 :to="{
-                                    name: 'StudentDashboard'
+                                    path: 'StudentDashboard'
                                 }" 
                                 class="flex items-center p-2 pl-11 w-full text-base font-medium text-white rounded-lg transition duration-75 group hover:no-underline hover:bg-blue-700 hover:text-white dark:text-white dark:hover:bg-gray-700">
                                 Panel de control
@@ -118,7 +118,7 @@
                         <li>
                             <router-link
                                 :to="{
-                                    name: 'StudentCourses'
+                                    path: 'StudentCourses'
                                 }"
                                 class="flex items-center p-2 pl-11 w-full text-base font-medium text-white rounded-lg transition duration-75 group hover:no-underline hover:bg-blue-700 hover:text-white dark:text-white dark:hover:bg-gray-700">
                                 Mis Cursos

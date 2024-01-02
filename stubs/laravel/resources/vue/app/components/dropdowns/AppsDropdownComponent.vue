@@ -22,8 +22,8 @@
 
             <div class="grid grid-cols-3 gap-4 p-4">
                 
-                <router-link 
-                    path="/chat"
+                <a
+                    href="chat"
                     class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group">
 
                     <svg aria-hidden="true" class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -33,10 +33,10 @@
 
                     <div class="text-sm text-gray-900 dark:text-white"> Chat </div>
 
-                </router-link>
+                </a>
 
-                <router-link
-                    path="/calendar"
+                <a
+                    href="/calendar"
                     class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group">
                     
                     <svg aria-hidden="true" class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -49,10 +49,10 @@
 
                     </div>
 
-                </router-link>
+                </a>
                 
-                <router-link 
-                    path="/courses"
+                <a
+                    href="courses"
                     class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group">
                     
                     <svg aria-hidden="true" class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -63,10 +63,10 @@
                         Grupos
                     </div>
 
-                </router-link>
+                </a>
                 
-                <router-link 
-                    path="/courses"
+                <a
+                    href="courses"
                     class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group">
                     
                     <i class="fa-solid fa-chalkboard-user fa-xl pb-6 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-40"></i>
@@ -77,10 +77,10 @@
 
                     </div>
 
-                </router-link>
+                </a>
                 
-                <router-link 
-                    path="/reports"
+                <a
+                    href="reports"
                     class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group">
                     
                     <svg aria-hidden="true" class="mx-auto mb-2 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -91,10 +91,10 @@
                         Reportes
                     </div>
 
-                </router-link>
+                </a>
 
-                <router-link 
-                    path="/courses"
+                <a
+                    href="courses"
                     class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group">
                     
                     <svg class="mx-auto mb-2 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -105,7 +105,7 @@
                         Crear 
                     </div>
 
-                </router-link>
+                </a>
 
             </div>
 

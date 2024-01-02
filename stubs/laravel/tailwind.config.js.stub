@@ -6,7 +6,20 @@ module.exports = {
     "./resources/**/*.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        15: '3.75rem',
+      },
+      colors: {
+        'app-color': '#007BFF', // # Blue
+        // 'app-color': '#00FF26', // # Green
+        'bright-blue': '#0026FF',
+        'bright-green': '#00FF26',
+        'tec-blue': '#0039a6',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 }
