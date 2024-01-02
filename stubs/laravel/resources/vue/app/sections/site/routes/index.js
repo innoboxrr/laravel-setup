@@ -6,7 +6,7 @@ export default [
 
 	{
 		path: '/',
-		name: "Site",
+		name: "Home",
 		component: () => import(/* webpackChunkName: "SiteLayout"*/ "./../layouts/default/SiteLayout.vue"),
 		meta: {
 			title: "Inicio",

@@ -84,7 +84,7 @@
                     <a 
                         v-if="!$store.getters['authPages/isAuth']"
                         href="/auth"
-                        class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 lg:py-2.5 mr-2 m-dark:bg-primary-600 m-dark:hover:bg-primary-700 focus:outline-none m-dark:focus:ring-primary-800 hover:text-white">
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 lg:py-2.5 mr-2 m-dark:bg-blue-600 m-dark:hover:bg-blue-700 focus:outline-none m-dark:focus:ring-blue-800 hover:text-white">
 
                         Acceso
 
@@ -138,7 +138,7 @@
                         <li>
                     
                             <a href="/"
-                                class="block py-2 pr-4 pl-3 border-b border-gray-100 text-primary-600 m-dark:text-primary-500 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:p-0 m-dark:hover:bg-gray-700 m-dark:hover:text-primary-500 lg:dark:hover:bg-transparent m-dark:border-gray-700"
+                                class="block py-2 pr-4 pl-3 border-b border-gray-100 text-blue-600 m-dark:text-blue-500 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:p-0 m-dark:hover:bg-gray-700 m-dark:hover:text-blue-500 lg:dark:hover:bg-transparent m-dark:border-gray-700"
                                 aria-current="page">
 
                                 Inicio
@@ -210,7 +210,7 @@
                         <li>
                     
                             <a href="/"
-                                class="block py-2 pr-4 pl-3 border-b border-gray-100 text-primary-600"
+                                class="block py-2 pr-4 pl-3 border-b border-gray-100 text-blue-600"
                                 aria-current="page">
 
                                 Inicio
