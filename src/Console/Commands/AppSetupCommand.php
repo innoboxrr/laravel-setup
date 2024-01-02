@@ -361,11 +361,13 @@ class AppSetupCommand extends Command
         $authServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AuthServiceProvider.php.stub');
         $eventServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/EventServiceProvider.php.stub');
         $broadcastServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/BroadcastServiceProvider.php.stub');
-    
+        $routeServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/RouteServiceProvider.php.stub');
+
         file_put_contents(base_path('app/Providers/AppServiceProvider.php'), $appServiceProvider);
         file_put_contents(base_path('app/Providers/AuthServiceProvider.php'), $authServiceProvider);
         file_put_contents(base_path('app/Providers/EventServiceProvider.php'), $eventServiceProvider);
         file_put_contents(base_path('app/Providers/BroadcastServiceProvider.php'), $broadcastServiceProvider);
+        file_put_contents(base_path('app/Providers/RouteServiceProvider.php'), $routeServiceProvider);
     }
 
     //////////////////////////////////////////////////////////////////
