@@ -127,37 +127,23 @@
 
 		methods: {
 
-			fetchData() {
+			async fetchData() {
 
-				this.fetchUser().then( res => {
+				let res = await this.fetchUser();
 
-					this.dataLoaded = true;
+				this.dataLoaded = true;
 					
-					this.title = this.user.name;
+				this.title = this.user.name;
 
-					document.title = this.title;
-
-				});
+				document.title = this.title;
 
 			},
 
-			fetchUser() {
+			async fetchUser() {
 
-				return new Promise((resolve, reject) => {
+				let res = await showModel(this.userId);
 
-					showModel(this.userId).then( res => {
-
-	                    this.user = res.data;
-
-	                    resolve(res);
-
-	                }).catch( error => {
-
-	                    reject(error);
-
-	                });
-
-				});
+				this.user = res;
 
             },
 
