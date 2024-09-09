@@ -1,0 +1,29 @@
+// VUE
+import { createApp } from 'vue'
+import App from '@app/App.vue'
+import router from '@router'
+import vuex from '@vuex'
+import mixin from '@js/mixin.js'
+import { RECAPTCHA_SITE_KEY } from '@js/env.js'
+import { VueHttpRequestPlugin } from 'innoboxrr-http-request'
+import { VueReCaptcha } from 'vue-recaptcha-v3';
+import { globalComponentRegistration } from '@js/global-components.js'
+import { globalDirectivesRegistration } from '@js/global-directives.js'
+import { globalPropertiesRegistration } from '@js/global-properties.js'
+
+// Vue App
+window.app = createApp(App);
+app.use(router);
+app.use(vuex);
+app.mixin(mixin);
+app.use(VueHttpRequestPlugin);
+app.use(VueReCaptcha, { siteKey: RECAPTCHA_SITE_KEY });
+
+// Registro Global de componentes
+globalComponentRegistration(app);
+globalDirectivesRegistration(app);
+globalPropertiesRegistration(app, vuex);
+
+// Vue Model
+
+window.vm = app.mount('#app');

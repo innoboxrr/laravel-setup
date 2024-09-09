@@ -1,4 +1,5 @@
 import { initFlowbite } from 'flowbite'
+import { closeDropdown, closeDrawer } from './utils.js'
 
 export const globalDirectivesRegistration = (app) => {
 
@@ -6,6 +7,21 @@ export const globalDirectivesRegistration = (app) => {
 	    mounted(el) {
 	        initFlowbite(el);
 	    }
+	});
+
+	app.directive('close-dropdown', {
+		mounted(el, binding) {
+			const dropdown = binding.value.dropdown;
+			const trigger = binding.value.trigger;
+        	el.addEventListener('click', () => closeDropdown(dropdown, trigger));
+		}
+	});
+
+	app.directive('close-drawer', {
+		mounted(el, binding) {
+			const drawer = binding.value.drawer;
+			el.addEventListener('click', () => closeDrawer(drawer));
+		}
 	});
 
 }

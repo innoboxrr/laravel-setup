@@ -74,6 +74,8 @@ class AppSetupCommand extends Command
 
         $this->replaceProvidersFiles();
 
+        $this->registerServiceProvider();
+
         $this->info('¡La configuración se ha completado con éxito!'); 
        
     }
@@ -368,6 +370,16 @@ class AppSetupCommand extends Command
         file_put_contents(base_path('app/Providers/EventServiceProvider.php'), $eventServiceProvider);
         file_put_contents(base_path('app/Providers/BroadcastServiceProvider.php'), $broadcastServiceProvider);
         file_put_contents(base_path('app/Providers/RouteServiceProvider.php'), $routeServiceProvider);
+    }
+
+    private function registerServiceProvider()
+    {
+        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub'
+        $providersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub');
+
+        // Poner el contenido en el archivo bootstrap/providers.php
+        file_put_contents(base_path('bootstrap/providers.php'), $providersFile);
+
     }
 
     //////////////////////////////////////////////////////////////////

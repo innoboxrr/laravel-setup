@@ -1,27 +1,17 @@
 <!DOCTYPE html>
 
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 	<head>
-		
 		<meta charset="utf-8">
-		
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-
         <meta name="usr" content="{{ base64_encode(@user()->id) }}">
-
 		<meta name="conf" content="{{ @user()->email_verified_at }}">
-		
 		<title></title>
-
 		@vite('resources/css/app.css')
-
 	</head>
 
 	<body>
-
 		<div id="app-loader" class="loader" style="display: none;">
 			<div role="status">
 				<svg aria-hidden="true" class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +21,6 @@
 				<span class="sr-only">Loading...</span>
 			</div>
 		</div>
-
 		<div id="loader" class="loader" style="display: none;">
 			<div role="status">
 				<svg aria-hidden="true" class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,11 +30,7 @@
 				<span class="sr-only">Loading...</span>
 			</div>
 		</div>
-
 		<div id="app"></div>
-
 		@vite('resources/js/app.js')
-
 	</body>
-
 </html>
