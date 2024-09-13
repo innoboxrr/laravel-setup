@@ -32,15 +32,10 @@ export let strings = {
 };
 
 export const setFilters = (newFilters = {}) => {
-
 	filters = {
-
 		...filters,
-
 		...newFilters,
-
 	}
-
 	return filters;
 };
 
@@ -95,7 +90,7 @@ export const dataTableHead = () => {
 		},
 		{
 			id: 'name',
-			value: 'Nombre',
+			value: 'Name',
 			sortable: true,
 			html: false,
 			parser: (value) => {
@@ -104,15 +99,50 @@ export const dataTableHead = () => {
 
 			}
 		},
+        {
+            id: 'surname',
+            value: 'Surname',
+            sortable: true,
+            html: false,
+            parser: (value) => {
+
+                return value;
+
+            }
+        },
 		{
 			id: 'email',
-			value: 'Correo',
+			value: 'Email',
 			sortable: true,
 			html: false,
 			parser: (value) => {
 
 				return value;
 
+			}
+		},
+        {
+            id: 'dob',
+            value: 'Day of birth',
+            sortable: true,
+            html: false,
+            parser: (value) => {
+
+                return value;
+
+            }
+        },
+        {
+			id: 'email_verified_at',
+			value: 'Verified',
+			sortable: true,
+			html: true,
+			parser: (value) => {
+                if(value) {
+                    return '<i class="fas fa-check text-success"></i>';
+                } else {
+                    return '<i class="fas fa-times text-danger text-red-600"></i>';
+                } 
 			}
 		},
 		/*
@@ -136,6 +166,8 @@ export const dataTableSort = () => {
 		id: 'asc',
 		name: 'asc',
 		email: 'asc',
+        surname: 'asc',
+        dob: 'asc',
 		// Añadir columnas ordenables
 	};
 };
@@ -188,6 +220,14 @@ export const updateModel = (modelId, data) => {
     }, {}, 1, 1500);
 };
 
+export const updatePassword = (modelId, data) => {
+    return makeHttpRequest('post', route('auth.update.password'), {
+        _token: CSRF_TOKEN,
+        ...data,
+        user_id: modelId,
+    }, {}, 1, 1500);
+};
+
 export const deleteModel = (data) => {
     const confirmOptions = {
         title: strings.deleteModel.confirmation.title,
@@ -202,7 +242,7 @@ export const deleteModel = (data) => {
         _token: CSRF_TOKEN,
         _method: 'DELETE',
         user_id: data.id,
-    }, {}, 3, 1500, confirmOptions);
+    }, {}, 0, 1500, confirmOptions);
 };
 
 export const exportModel = (data) => {
@@ -218,5 +258,99 @@ export const exportModel = (data) => {
     return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'export'), {
         _token: CSRF_TOKEN,
         ...data,
-    }, {}, 3, 1500, confirmOptions);
+    }, {}, 0, 1500, confirmOptions);
+};
+
+export const assignRole = (modelId, roleId) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'assign.role'), {
+        _token: CSRF_TOKEN,
+        user_id: modelId,
+		role_id: roleId,
+    }, {}, 1, 1500);
+};
+
+export const deallocateRole = (modelId, roleId) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'deallocate.role'), {
+        _token: CSRF_TOKEN,
+        user_id: modelId,
+		role_id: roleId,
+    }, {}, 1, 1500);
+};
+
+export const logoutOtherDevices = (modelId, password) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'logout.other.devices'), {
+        _token: CSRF_TOKEN,
+        user_id: modelId,
+		password: password,
+    }, {}, 1, 1500);
+};
+
+export const deleteAccount = (modelId, password) => {
+    const confirmOptions = {
+        title: 'Confirm operation',
+        text: 'Yes, delete account',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: t('Yes, delete'),
+    };
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'delete.account'), {
+        _token: CSRF_TOKEN,
+        user_id: modelId,
+		password: password,
+    }, {}, 0, 1500, confirmOptions);
+};
+
+export const impersonate = async (params) => {
+    let res = await makeHttpRequest('get', params.link, {}, {}, 3, 1500);
+    try {
+        await makeHttpRequest('GET', '/sanctum/csrf-cookie');
+        let response = await makeHttpRequest('GET', route('auth.get.auth'));
+        if(response?.user?.id) {
+            console.log(response.user.impersonate_token);
+            window.open('/login-as/' + response.user.impersonate_token + '/true', '_blank');
+            // location.href = '/login-as/' + response.user.impersonate_token;
+        }
+        // location.href = params.redirect ?? '/';
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const sendOTP = (params) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'send.otp'), {
+        _token: CSRF_TOKEN,
+        user_id: params.id,
+    }, {}, 1, 1500);
+};
+
+export const sendDirectResetPasswordLink = (params) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'send.direct.reset.password.link'), {
+        _token: CSRF_TOKEN,
+        user_id: params.id,
+    }, {}, 1, 1500);
+}
+
+export const assignBenefit = (modelId, benefitId) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'assign.benefit'), {
+        _token: CSRF_TOKEN,
+        user_id: modelId,
+		benefit_id: benefitId,
+    }, {}, 1, 1500);
+};
+
+export const deallocateBenefit = (modelId, benefitId) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'deallocate.benefit'), {
+        _token: CSRF_TOKEN,
+        user_id: modelId,
+		benefit_id: benefitId,
+    }, {}, 1, 1500);
+};
+
+export const verifyEmail = (params) => {
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'verify.email'), {
+        _token: CSRF_TOKEN,
+        user_id: params.id,
+    }, {}, 1, 1500);
 };

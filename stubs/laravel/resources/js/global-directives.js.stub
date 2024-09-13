@@ -9,6 +9,14 @@ export const globalDirectivesRegistration = (app) => {
 	    }
 	});
 
+	app.directive('preline', {
+		mounted() {
+			setTimeout(() => {
+				window.HSStaticMethods.autoInit();
+			}, 1000);
+		}	
+	});
+
 	app.directive('close-dropdown', {
 		mounted(el, binding) {
 			const dropdown = binding.value.dropdown;

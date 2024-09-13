@@ -1,25 +1,35 @@
 <template>
     <form :id="formId" @submit.prevent="onSubmit">
 
-        <!-- NAME INPUT -->
         <text-input-component
             :custom-class="inputClass"
             type="text"
             name="name"
-            label="Nombre"
-            placeholder="Nombre"
+            :label="__('Name')"
+            :placeholder="__('Name')"
             validators="required length"
             min_length="3"
-            max_length="100"
+            max_length="130"
             v-model="name" />
+
+        <text-input-component
+            :custom-class="inputClass"
+            type="text"
+            name="surname"
+            :label="__('Surname')"
+            :placeholder="__('Surname')"
+            validators="required length"
+            min_length="3"
+            max_length="130"
+            v-model="surname" />
 
         <!-- EMAIL INPUT -->
         <text-input-component
             :custom-class="inputClass"
             type="email"
             name="email"
-            label="Email"
-            placeholder="Email"
+            :label="__('Email')"
+            :placeholder="__('Email')"
             validators="required email"
             v-model="email" />
 
@@ -28,8 +38,8 @@
             :custom-class="inputClass"
             type="password"
             name="password"
-            label="Contraseña"
-            placeholder="Contraseña"
+            :label="__('Password')"
+            :placeholder="__('Password')"
             validators="required"
             v-model="password" />
 
@@ -38,16 +48,47 @@
             :custom-class="inputClass"
             type="date"
             name="dob"
-            label="Fecha de Nacimiento"
-            validators="required date"
+            :label="__('Date of birth')"
+            :placeholder="__('Date of birth')"
+            validators="date"
             v-model="dob" />
 
-        <p class="text-sm text-gray-500 mb-4 text-right">* Campos obligatorios</p>
+        <select-input-component
+            :custom-class="inputClass"
+            name="visibility"
+            :label="__('Visibility')"
+            :validators="'required'"
+            v-model="visibility">
+            <option value="public">{{ __('Public') }}</option>
+            <option value="private">{{ __('Private') }}</option>
+        </select-input-component>
+
+        <select-input-component
+            :custom-class="inputClass"
+            name="blocked"
+            :label="__('Bloqued')"
+            :validators="'required'"
+            v-model="blocked">
+            <option :value="0">{{ __('No') }}</option>
+            <option :value="1">{{ __('Yes') }}</option>
+        </select-input-component>
+
+        <model-search-input-component 
+            custom-class=""
+            :label-str="__('Country')"
+            :placeholder-str="__('Search country')"
+            :route="countryRoute"
+            q="global"
+            :get-option-label="option => `${option.name} (Código: ${option.iso})`"
+            :no-options-text="__('No countries found')"
+            @submit="setCountry" /> 
+
+        <p class="text-sm text-gray-500 mb-4 text-right dark:text-gray-200">* {{ __('Mandatory fields') }}</p>
 
         <button-component
             :custom-class="buttonClass"
             :disabled="disabled"
-            value="Crear" />
+            :value="__('Create user')" />
     </form>
 </template>
 
@@ -56,13 +97,15 @@
     import JSValidator from 'innoboxrr-js-validator'
     import {
         TextInputComponent,
-        ButtonComponent
+        ButtonComponent,
+        ModelSearchInputComponent
     } from 'innoboxrr-form-elements'
 
     export default {
         components: {
             TextInputComponent,
-            ButtonComponent
+            ButtonComponent,
+            ModelSearchInputComponent,
         },
         props: {
             formId: {
@@ -78,31 +121,39 @@
                 password: '',
                 country_id: null,
                 dob: '',
-                status: '',
+                visibility: 'public',
+                blocked: 0,
                 disabled: false,
                 JSValidator: undefined,
+                countryRoute: route('api.country.index') + '?loader=false',
             }
         },
         mounted() {
             this.JSValidator = new JSValidator(this.formId).init();
         },
         methods: {
+            setCountry(countryId) {
+                this.country_id = countryId;
+            },
             onSubmit() {
                 if (this.JSValidator.status) {
                     this.disabled = true;
                     createModel({
                         name: this.name,
+                        surname: this.surname,
                         email: this.email,
                         password: this.password,
-                        country_id: this.country_id,
                         dob: this.dob,
-                        status: this.status
+                        visibility: this.visibility,
+                        blocked: this.blocked,
+                        country_id: this.country_id,
                     }).then(res => {
                         this.$emit('submit', res);
+                        this.alert('success');
                         setTimeout(() => { this.disabled = false; }, 2500);
                     }).catch(error => {
                         this.disabled = false;
-                        if (error.response.status == 422)
+                        if (error?.response?.status == 422)
                             this.JSValidator.appendExternalErrors(error.response.data.errors);
                     });
                 } else {

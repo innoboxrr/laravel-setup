@@ -6,6 +6,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
     scrollBehavior(to, from, savedPosition) {
+        if(to.query.scroll_top == 'false') return;
         return { 
             top: 0,
             behavior: 'smooth',
@@ -14,10 +15,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    // Perform any action before apply middlewares
-    // ...
+
     // Si no tiene middle ware retornar la ruta de destino
     if(!to.meta.middleware)  return next();
+
     // Si existen middleware, los asignamos a una constante.
     const middleware = to.meta.middleware;
     const context = {

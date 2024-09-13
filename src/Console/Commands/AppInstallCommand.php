@@ -26,7 +26,10 @@ class AppInstallCommand extends Command
      * Execute the console command.
      */
     public function handle()
-    {
+    {   
+        set_time_limit(0);
+
+        $this->info('Instalando dependencias...');
 
         $process = new Process(['composer', 'update']);
         $process->run();

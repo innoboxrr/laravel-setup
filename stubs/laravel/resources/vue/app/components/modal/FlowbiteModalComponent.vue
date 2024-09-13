@@ -1,9 +1,9 @@
 <template>
-    <div v-if="open" :id="id" class="fixed inset-0 z-50 overflow-y-auto">
+    <div v-if="open" :id="id" class="fixed inset-0 z-50 overflow-y-auto flowbite-modal">
 
         <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="bgClick">
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
@@ -14,7 +14,7 @@
                     'max-w-6xl': largeModal, // 90% para largeModal
                     'max-w-lg': !largeModal  // Tamaño estándar para otros casos
                  }"
-                 class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-700 sm:my-8 sm:align-middle sm:w-full">
+                 class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-700 sm:my-8 sm:align-middle sm:w-full flowbite-modal-container">
                 
                 <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-600">
                     <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ title }}</h2>
@@ -61,11 +61,20 @@ export default {
             type: Boolean,
             default: false,
         },
+        closeOnBgClick: {
+            type: Boolean,
+            default: true,
+        }
     },
     emits: ['close'],
     methods: {
         closeModal() {
             this.$emit('close');
+        },
+        bgClick() {
+            if (this.closeOnBgClick) {
+                this.closeModal();
+            }
         }
     }
 }

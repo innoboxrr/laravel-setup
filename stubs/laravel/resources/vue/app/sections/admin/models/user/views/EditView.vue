@@ -46,7 +46,7 @@
 
 				getPolicy('update', this.$route.params.id).then( res => {
 
-					if(!res.data.update) {
+					if(!res.update) {
 
 						// this.$router.push({name: "NotAuthorized" });
 						
@@ -66,7 +66,7 @@
 
 					params: { 
 
-						id: payload.data.id 
+						id: payload.id 
 
 					} 
 

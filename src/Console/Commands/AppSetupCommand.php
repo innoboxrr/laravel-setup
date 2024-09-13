@@ -3,10 +3,12 @@
 namespace Innoboxrr\LaravelSetup\Console\Commands;
 
 use Illuminate\Console\Command;
+use Innoboxrr\LaravelSetup\Utils\FileManager;
 use Innoboxrr\LaravelSetup\Utils\ComposerJsonEditor;
 
 class AppSetupCommand extends Command
 {
+    use FileManager;
     
     /**
      * The name and signature of the console command.
@@ -38,9 +40,29 @@ class AppSetupCommand extends Command
 
         $this->addPostCssConfig();
 
+        $this->addCommands();
+
+        $this->addPhpDoc();
+
+        $this->addContracts();
+
+        $this->addExports();
+
         $this->addAppHelpers();
 
-        $this->addAppController();
+        $this->addHttp();
+
+        $this->addModels();
+
+        $this->addNotifications();
+
+        $this->addObservers();
+
+        $this->addPolicies();
+
+        $this->addServices();
+
+        $this->addSupport();
 
         $this->updateComposerJson();
 
@@ -48,7 +70,13 @@ class AppSetupCommand extends Command
 
         $this->replaceJsBootstrap();
 
+        $this->addJsVue();
+
         $this->addJsEnv();
+
+        $this->addJsEvents();
+
+        $this->addJsLoadLayout();
 
         $this->addJsGlobalComponents();
 
@@ -75,6 +103,8 @@ class AppSetupCommand extends Command
         $this->replaceProvidersFiles();
 
         $this->registerServiceProvider();
+
+        $this->registerAppConfig();
 
         $this->info('¡La configuración se ha completado con éxito!'); 
        
@@ -153,28 +183,101 @@ class AppSetupCommand extends Command
 
     }
 
+    // COMMANDS //
+
+    private function addCommands()
+    {
+        $this->mkDir(base_path('app/Console/Commands'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Console/Commands', base_path('app/Console/Commands'));
+    }
+
+    // PHPDOC //
+
+    private function addPhpDoc()
+    {
+        $phpDocFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/phpDoc.phar');
+        file_put_contents(base_path('phpDoc.phar'), $phpDocFile);
+    }
+
+    // CONTRACTS //
+
+    private function addContracts()
+    {
+        $this->mkDir(base_path('app/Contracts'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Contracts', base_path('app/Contracts'));
+    }
+
+    // EXPORTS //
+
+    private function addExports()
+    {
+        $this->mkDir(base_path('app/Exports'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Exports', base_path('app/Exports'));
+    }
+
     // HELPERS //
 
     private function addAppHelpers()
     {
-
-        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Helpers/app.php.stub');
-
         $this->mkDir(base_path('app/Helpers'));
-
+        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Helpers/app.php.stub');
         file_put_contents(base_path('app/Helpers/app.php'), $helpersFile);
-
     }
 
-    // CONTROLLER //
+    // HTTP //
 
-    private function addAppController()
+    private function addHttp()
     {
+        $this->mkDir(base_path('app/Http'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Http', base_path('app/Http'));
+    }
 
-        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Http/Controllers/AppController.php.stub');
+    // MODELS //
 
-        file_put_contents(base_path('app/Http/Controllers/AppController.php'), $viteConfig);
+    private function addModels()
+    {
+        $this->mkDir(base_path('app/Models'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Models', base_path('app/Models'));
+    }
 
+    // NOTIFICATIONS //
+
+    private function addNotifications()
+    {
+        $this->mkDir(base_path('app/Notifications'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Notifications', base_path('app/Notifications'));
+    }
+
+    // OBSERVERS //
+
+    private function addObservers()
+    {
+        $this->mkDir(base_path('app/Observers'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Observers', base_path('app/Observers'));
+    }
+
+    // POLICIES //
+
+    private function addPolicies()
+    {
+        $this->mkDir(base_path('app/Policies'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Policies', base_path('app/Policies'));
+    }
+
+    // SERVICES //
+
+    private function addServices()
+    {
+        $this->mkDir(base_path('app/Services'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Services', base_path('app/Services'));
+    }
+
+    // SUPPORT //
+
+    private function addSupport()
+    {
+        $this->mkDir(base_path('app/Support'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Support', base_path('app/Support'));
     }
 
     // COMPOSER PACKAGES INSTALATION //
@@ -223,20 +326,32 @@ class AppSetupCommand extends Command
 
     private function replaceJsBootstrap()
     {
-
         $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/bootstrap.js.stub');
-
         file_put_contents(base_path('resources/js/bootstrap.js'), $viteConfig);
+    }
 
+    private function addJsVue()
+    {
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/vue.js.stub');
+        file_put_contents(base_path('resources/js/vue.js'), $viteConfig);
     }
 
     private function addJsEnv()
     {
-
         $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/env.js.stub');
-
         file_put_contents(base_path('resources/js/env.js'), $viteConfig);
+    }
 
+    private function addJsEvents()
+    {
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/events.js.stub');
+        file_put_contents(base_path('resources/js/events.js'), $viteConfig);
+    }
+
+    private function addJsLoadLayout()
+    {
+        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/js/loadLayout.js.stub');
+        file_put_contents(base_path('resources/js/loadLayout.js'), $viteConfig);
     }
 
     private function addJsGlobalComponents()
@@ -319,29 +434,20 @@ class AppSetupCommand extends Command
 
     private function createAppBladeFile()
     {
-
         // Arroja error
         //$this->rrDir(resource_path('views'));
-
         $path = $this->mkDir(resource_path('views'));
-
         $bladeFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/views/app.blade.php.stub');
-
         file_put_contents(resource_path('views/app.blade.php'), $bladeFile);
-
     }
 
     // VUE // 
 
     private function copyVueDir()
     {   
-
         $src = __DIR__ . '/../../../stubs/laravel/resources/vue';
-
         $dst = resource_path('vue');
-
         $this->cpDir($src, $dst);
-
     }
 
     // ROUTES //
@@ -372,6 +478,16 @@ class AppSetupCommand extends Command
         file_put_contents(base_path('app/Providers/RouteServiceProvider.php'), $routeServiceProvider);
     }
 
+    private function registerAppConfig()
+    {
+        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub'
+        $appFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub');
+
+        // Poner el contenido en el archivo bootstrap/app.php
+        file_put_contents(base_path('bootstrap/app.php'), $appFile);
+
+    }
+
     private function registerServiceProvider()
     {
         // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub'
@@ -379,91 +495,6 @@ class AppSetupCommand extends Command
 
         // Poner el contenido en el archivo bootstrap/providers.php
         file_put_contents(base_path('bootstrap/providers.php'), $providersFile);
-
-    }
-
-    //////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////
-
-    // Eliminar directorio
-    public function rrDir($path)
-    {
-
-        if(!file_exists($path)) {
-
-            return true;
-
-        }
-
-        if(!is_dir($path)) {
-
-            return unlink($path);
-
-        }
-
-        foreach(glob($path . '/*') as $item) {
-
-            if(is_dir($item)) {
-
-                $this->rrDir($item);
-
-            } else {
-
-                unlink($item);
-
-            }
-
-        }
-
-        return rmdir($path);
-
-    }
-
-    // Crear directorio
-    public function mkDir($path)
-    {
-
-        if(!file_exists($path)) {
-
-            mkdir($path, 0777, true);
-
-        }
-
-        if(is_dir($path)) {
-
-            chmod($path, 0777);
-
-        }
-
-        return $path;
-
-    }
-
-    // Copiar directorio
-    public function cpDir($src, $dst) {
-
-        $dir = opendir($src);
-
-        @mkdir($dst);
-
-        while (($file = readdir($dir)) !== false) {
-
-            if ($file != '.' && $file != '..') {
-
-                if (is_dir($src . '/' . $file)) {
-
-                    $this->cpDir($src . '/' . $file, $dst . '/' . $file);
-
-                } else {
-
-                    copy($src . '/' . $file, $dst . '/' . $file);
-
-                }
-
-            }
-        }
-
-        closedir($dir);
 
     }
 

@@ -1,6 +1,6 @@
 <template>
-	
-	<login-form 
+
+	<login-form
         @submit="login"/>
 
 </template>
@@ -10,23 +10,13 @@
 	import LoginForm from '../forms/LoginForm.vue';
 
     export default {
-        
+
         name: "LoginView",
 
 		components: {
 			LoginForm,
-		},		
+		},
 
-        data() {
-            return {
-                
-            }
-        },
-
-        mounted() {
-            
-        },
-        
         methods: {
             login(data) {
                 this.$store.dispatch('authPages/login', data);

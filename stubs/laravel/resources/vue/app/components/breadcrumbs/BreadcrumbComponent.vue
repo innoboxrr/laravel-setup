@@ -1,6 +1,6 @@
 <template>
     
-    <nav class="flex px-5" aria-label="Breadcrumb">
+    <nav class="flex px-5 py-4" aria-label="Breadcrumb">
         
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
 
@@ -31,7 +31,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
                     
-                    Admin 
+                    App 
 
                 </router-link>
 
@@ -41,7 +41,7 @@
 
                 
                 <router-link 
-                    :to="{ path: item.path }"
+                    :to="{ path: item.link }"
                     class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     
                     <!-- SVG icon here -->
@@ -49,7 +49,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
                     
-                    {{ item.text }}
+                    {{ item.title }}
                 
                 </router-link>
             
@@ -69,7 +69,7 @@
 
         props: {
 
-            items: {
+            pages: {
                 type: Array,
                 required: true
             },
@@ -79,7 +79,15 @@
                 default: true
             }
 
-        }
+        },
+
+        data() {
+
+            return {
+                items: this.pages
+            }
+
+        },
 
     }
 

@@ -1,85 +1,71 @@
-// ENV
-    
-    import env from '@js/env.js'
-
 // UIkit
 
     import UIkit from 'uikit';
-    
     import Icons from 'uikit/dist/js/uikit-icons';
-
     import CustomIcons from 'uikit-custom-icons'
-
     import LocalIcons from '@js/icons.js'
-
     UIkit.use(Icons);
-
     UIkit.icon.add(CustomIcons);
-
     UIkit.icon.add(LocalIcons.icons);
-
     window.UIkit = UIkit;
+
+// Preline
+
+    import "preline/preline";
+    import { HSStaticMethods } from "preline/preline";
+    window.HSStaticMethods = HSStaticMethods;
 
 // LODASH
 
     import _ from 'lodash';
-    
     window._ = _;
 
 // ROUTE
 
     import route, { setRoutes, setBaseUrl } from 'innoboxrr-route-resolver';
-
     import routes from '@json/routes.json';
-
     setRoutes(routes);
-
     // setBaseUrl(window.location.hostname);
-
     window.route = route;
 
 // LOCALE
 
-    import lang, {setTranslations, setLocale} from 'innoboxrr-i18n'
-
-    setTranslations(import.meta.globEager('/resources/lang/*.json'));
-
-    // setLocale('es-ES'); // Implementar lógica para cambiar idioma
-
+    import lang, {setTranslations, setLocale} from '@js/i18n.js'
+    setTranslations(import.meta.globEager('/resources/locales/*.json'));
+    let locale = document.querySelector('html').getAttribute('lang') ?? 'en';
+    setLocale(locale); 
     window.t = lang;
 
 // CHANCE: Library to generate any random string. Docs: https://chancejs.com/index.html
 
     import chance from 'chance'
-
     window.chance = chance.Chance();
 
 // SWAL
 
     import sweetalert2 from 'sweetalert2'
-    
     // Docs: https://sweetalert2.github.io/
     window.Swal = sweetalert2;
+
+// SWIPER
+    // import function to register Swiper custom elements
+    import { register as swiperRegister } from 'swiper/element/bundle';
+    swiperRegister();
 
 // AXIOS
     
     import axios from 'axios'
+    import { showLoader, hideLoader } from '@js/utils.js';
 
     window.axios = axios;
-    
     window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    
     axios.defaults.withCredentials = true;
     axios.defaults.withXSRFToken = true;
-
     window.csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    import { showLoader, hideLoader } from '@js/utils.js';
 
     // Agregar un interceptor para las solicitudes
     axios.interceptors.request.use(
         function (config) {
-
             const url = new URL(config.url, window.location.origin);
             const loaderParam = url.searchParams.get("loader");
 
@@ -115,7 +101,6 @@
     
     // En tu archivo principal, como index.js
     import { makeHttpRequest } from 'innoboxrr-http-request';
-
     window.makeHttpRequest = makeHttpRequest;
 
 // DAYJS
@@ -143,47 +128,40 @@
     dayjs.tz.setDefault('America/Mexico_City')
 
 // FLOWBITE
-
     import 'flowbite';
 
-// VUE
+// ECHO
+    import Pusher from 'pusher-js';
+    import Echo from 'laravel-echo';
 
-    import { createApp } from 'vue'
+    window.Pusher = Pusher;
 
-    import App from '@app/App.vue'
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: import.meta.env.VITE_PUSHER_APP_KEY,
+        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+        forceTLS: true,
+        authorizer: (channel, options) => {
+            return {
+                authorize: (socketId, callback) => {
+                    axios.post('/broadcasting/auth', {
+                        socket_id: socketId,
+                        channel_name: channel.name
+                    })
+                    .then(response => {
+                        callback(false, response.data);
+                    })
+                    .catch(error => {
+                        callback(true, error);
+                    });
+                }
+            };
+        },
+    });
 
-    import router from '@router'
-    
-    import vuex from '@vuex'
-
-    import mixin from '@js/mixin.js'
-
-    import { VueHttpRequestPlugin } from 'innoboxrr-http-request'
-
-    import { globalComponentRegistration } from '@js/global-components.js'
-
-    import { globalDirectivesRegistration } from '@js/global-directives.js'
-
-// Vue App
-
-    window.app = createApp(App);
-
-    app.use(router);
-
-    app.use(vuex);
-
-    app.mixin(mixin);
-
-    app.use(VueHttpRequestPlugin);
-
-// Registro Global de componentes
-    
-    globalComponentRegistration(app);
-
-// Registro de directivas globales
-
-    globalDirectivesRegistration(app);
-
-// Vue Model
-
-    window.vm = app.mount('#app');
+// PrismJS
+    import Prism from 'prismjs';
+    import 'prismjs/themes/prism-okaidia.css';
+    import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
+    import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+    window.Prism = Prism;

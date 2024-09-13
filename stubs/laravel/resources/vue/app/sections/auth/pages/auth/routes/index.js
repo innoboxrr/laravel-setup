@@ -44,5 +44,16 @@ export default [
 				middleware.guest
 			]
 		}
+	},
+	{
+		path: 'direct-reset-password/:token/:email',
+		name: "DirectResetPassword",
+		component: () => import("./../views/DirectResetPasswordView.vue"),
+		meta: {
+			title: "Direct Reset Password",
+			middleware: [
+				middleware.guest
+			]
+		}
 	}
 ];
