@@ -287,17 +287,33 @@ class AppSetupCommand extends Command
 
         $editor = new ComposerJsonEditor(base_path('composer.json'));
 
-        $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
+        $editor->addParameter('require.algolia/scout-extended', '^3.1');
+
+        $editor->addParameter('require.google/recaptcha', '^1.3');
+
+        $editor->addParameter('require.innoboxrr/aws-file-manager', '^0.0');
+
+        $editor->addParameter('require.innoboxrr/laravel-audit', '^1.0');
 
         $editor->addParameter('require.innoboxrr/laravel-auth', '^3.0');
 
-        $editor->addParameter('require.innoboxrr/search-surge', '^2.0');
+        $editor->addParameter('require.innoboxrr/laravel-env-editor', 'dev-master');
 
-        $editor->addParameter('require.innoboxrr/laravel-audit', '^1.0');
+        $editor->addParameter('require.innoboxrr/laravel-notifications', '^1.7');
+
+        $editor->addParameter('require.innoboxrr/laravel-uploads', '^1.0');
+
+        $editor->addParameter('require.innoboxrr/locale-generator', '^1.0');
+
+        $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
+
+        $editor->addParameter('require.innoboxrr/search-surge', '^2.0');
 
         $editor->addParameter('require.innoboxrr/traits', '^1.0');
 
         $editor->addParameter('require.maatwebsite/excel', '^3.1'); // Excel
+
+        $editor->addParameter('require.opcodesio/log-viewer', '^3.0'); // Excel
 
         $editor->addParameter('require.league/flysystem-aws-s3-v3', '^3.0'); // AWS S3
 
@@ -306,6 +322,8 @@ class AppSetupCommand extends Command
         $editor->addParameter('require.staudenmeir/eloquent-has-many-deep', '^1.0'); // **
 
         $editor->addParameter('require-dev.innoboxrr/larapack-generator', '^4.0');
+
+        $editor->addParameter('require-dev.lab404/laravel-impersonate', '^1.7');
 
         $editor->addParameter('autoload.files', ['app/Helpers/app.php']);
 
