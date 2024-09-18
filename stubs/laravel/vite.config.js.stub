@@ -46,9 +46,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources',
-            '@js': '/resources/js',
-            '@css': '/resources/css',
-            '@json': '/resources/json',
+            '@componentes': '/resources/vue/
+            '@js': '/resources/vue/assets/js',
+            '@css': '/resources/vue/assets/css',
+            '@json': '/resources/vue/assets/json',
             '@app': '/resources/vue/app',
             '@router': '/resources/vue/router',
             '@vuex': '/resources/vue/vuex',

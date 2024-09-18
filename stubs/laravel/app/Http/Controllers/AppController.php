@@ -65,23 +65,7 @@ class AppController extends Controller
 
         return response()->json(['success' => $response->successful()]);
     }
-
-    public function quickStats()
-    {
-        return cache()->remember('quick-stats', now()->addMinutes(60), function () {
-            $courses = \App\Models\Course::count();
-            $students = \App\Models\User::students()->count();
-            $teachers = \App\Models\User::headTeachers()->count();
-            $reviews = \App\Models\Review::count();
-            return [
-                'courses' => $courses,
-                'students' => $students,
-                'teachers' => $teachers,
-                'reviews' => $reviews,
-            ];
-        });
-    }
-
+    
     public function exports($xlsx)
     {
         return Storage::disk('s3')->download("exports/{$xlsx}");

@@ -9,7 +9,6 @@ export default [
 	{
 		path: '/admin',
 		name: "Admin",
-        redirect: { name: "AdminStart" },
 		component: layoutComponent,
 		meta: {
 			title: "Administration",
