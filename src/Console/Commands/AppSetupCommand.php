@@ -36,16 +36,8 @@ class AppSetupCommand extends Command
         $this->addPostCssConfig();
         $this->addCommands();
         $this->addPhpDoc();
-        $this->addContracts();
-        $this->addExports();
         $this->addAppHelpers();
         $this->addHttp();
-        $this->addModels();
-        $this->addNotifications();
-        $this->addObservers();
-        $this->addPolicies();
-        $this->addServices();
-        $this->addSupport();
         $this->addMigrations();
         $this->updateComposerJson();
         $this->addVue();
@@ -128,20 +120,6 @@ class AppSetupCommand extends Command
         file_put_contents(base_path('phpDoc.phar'), $phpDocFile);
     }
 
-    // CONTRACTS //
-    private function addContracts()
-    {
-        $this->mkDir(base_path('app/Contracts'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Contracts', base_path('app/Contracts'));
-    }
-
-    // EXPORTS //
-    private function addExports()
-    {
-        $this->mkDir(base_path('app/Exports'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Exports', base_path('app/Exports'));
-    }
-
     // HELPERS //
     private function addAppHelpers()
     {
@@ -157,47 +135,7 @@ class AppSetupCommand extends Command
         $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Http', base_path('app/Http'));
     }
 
-    // MODELS //
-    private function addModels()
-    {
-        $this->mkDir(base_path('app/Models'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Models', base_path('app/Models'));
-    }
 
-    // NOTIFICATIONS //
-    private function addNotifications()
-    {
-        $this->mkDir(base_path('app/Notifications'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Notifications', base_path('app/Notifications'));
-    }
-
-    // OBSERVERS //
-    private function addObservers()
-    {
-        $this->mkDir(base_path('app/Observers'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Observers', base_path('app/Observers'));
-    }
-
-    // POLICIES //
-    private function addPolicies()
-    {
-        $this->mkDir(base_path('app/Policies'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Policies', base_path('app/Policies'));
-    }
-
-    // SERVICES //
-    private function addServices()
-    {
-        $this->mkDir(base_path('app/Services'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Services', base_path('app/Services'));
-    }
-
-    // SUPPORT //
-    private function addSupport()
-    {
-        $this->mkDir(base_path('app/Support'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Support', base_path('app/Support'));
-    }
 
     // MIGRATIONS //
     private function addMigrations()
