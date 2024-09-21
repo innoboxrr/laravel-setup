@@ -61,6 +61,40 @@
 
 		            </li>
 
+					<li class="text-sm text-gray-700 dark:text-gray-200">
+
+		                <router-link
+		                	:to="{
+		                		name: 'AdminAssignRoleUser',
+		                		params: {
+		                			id: user.id
+		                		}
+		                	}" 
+		                	class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white hover:no-underline">
+
+							<i class="fa-solid fa-user-tag pr-2"></i> Roles
+
+		                </router-link>
+
+		            </li>
+
+					<li class="text-sm text-gray-700 dark:text-gray-200">
+
+		                <router-link
+		                	:to="{
+		                		name: 'AdminAssignPermissionUser',
+		                		params: {
+		                			id: user.id
+		                		}
+		                	}" 
+		                	class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white hover:no-underline">
+
+							<i class="fa-solid fa-key pr-2"></i> Permisos
+
+		                </router-link>
+
+		            </li>
+
 		            <li class="text-sm text-gray-700 dark:text-gray-200">
 
 		                <a 

@@ -94,10 +94,11 @@
                         password_confirmation: this.password_confirmation
                     }).then(res => {
                         this.$emit('submit', res);
+                        this.alert('success');
                         setTimeout(() => { this.disabled = false; }, 2500);
                     }).catch(error => {
                         this.disabled = false;
-                        if (error.response.status == 422)
+                        if (error?.response?.status == 422)
                             this.JSValidator.appendExternalErrors(error.response.data.errors);
                     });
                 } else {

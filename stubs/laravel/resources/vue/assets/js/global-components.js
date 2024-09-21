@@ -1,0 +1,32 @@
+// Import components
+import DarkModeComponent from '@app/components/dark-mode';
+import BreadcrumbComponent from '@app/components/breadcrumbs';	
+import ModalComponent from '@app/components/modal';
+import JsonViewer from '@app/components/json-viewer';
+import { InputErrorComponent } from '@app/components/forms';
+
+import { 
+	UserDropdownComponent,
+	AppsDropdownComponent,
+	NotificationsDropdownComponent,
+	DropdownButtonComponent,
+} from '@app/components/dropdowns';
+
+
+const globalComponentRegistration = (app) => {
+
+	// Ej: app.component('Alias', Name);
+	app.component('dark-mode-component', DarkModeComponent);
+	app.component('breadcrumb-component', BreadcrumbComponent);
+	app.component('user-dropdown-component', UserDropdownComponent);
+	app.component('apps-dropdown-component', AppsDropdownComponent);
+	app.component('notifications-dropdown-component', NotificationsDropdownComponent);
+	app.component('dropdown-button-component', DropdownButtonComponent);
+	app.component('modal-component', ModalComponent);
+	app.component('json-viewer-component', JsonViewer);
+	app.component('input-error-component', InputErrorComponent);
+}
+
+export {
+	globalComponentRegistration
+}

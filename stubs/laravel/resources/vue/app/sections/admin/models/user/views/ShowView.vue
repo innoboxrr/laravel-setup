@@ -2,7 +2,7 @@
 
 	<div v-if="dataLoaded">
 
-		<breadcrumb-component :items="items" />
+		<breadcrumb-component :pages="pages" />
 	    
 		<div class="mt-4">
 
@@ -21,7 +21,7 @@
 
 					</div>
 
-					<div class="uk-width-expand uk-width-1-2@m uk-width-1-1@s">
+					<div class="uk-width-expand">
 
 						<div v-if="this.isShowView">
 
@@ -94,29 +94,29 @@
 
 			},
 
-			items() {
+			pages() {
 
 				if(this.$route.name == 'AdminShowUser') {
 
 					return [
-						{ text: 'Usuarios', path: '/admin/user'},
-						{ text: this.user.name ?? 'Usuario', path: '/admin/user/' + this.user.id}
+						{ title: 'Usuarios', link: '/admin/user'},
+						{ title: this.user.name ?? 'Usuario', link: '/admin/user/' + this.user.id}
 					];
 
 				} else if(this.$route.name == 'AdminEditUser') {
 
 					return [
-						{ text: 'Usuarios', path: '/admin/user'},
-						{ text: this.user.name ?? 'Usuario' , path: '/admin/user/' + this.user.id},
-						{ text: 'Editar', path: '/admin/user/' + this.user.id + '/edit'}	
+						{ title: 'Usuarios', link: '/admin/user'},
+						{ title: this.user.name ?? 'Usuario' , link: '/admin/user/' + this.user.id},
+						{ title: 'Editar', link: '/admin/user/' + this.user.id + '/edit'}	
 					];
 
 				} else if(this.$route.name == 'AdminRoleAssignmentUser') {
 
 					return [
-						{ text: 'Usuarios', path: '/admin/user'},
-						{ text: this.user.name ?? 'Usuario' , path: '/admin/user/' + this.user.id},
-						{ text: 'Asignar rol', path: '/admin/user/' + this.user.id + '/role-assignment'}	
+						{ title: 'Usuarios', link: '/admin/user'},
+						{ title: this.user.name ?? 'Usuario' , link: '/admin/user/' + this.user.id},
+						{ title: 'Asignar rol', link: '/admin/user/' + this.user.id + '/role-assignment'}	
 					];
 
 				}

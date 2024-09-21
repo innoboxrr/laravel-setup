@@ -1,11 +1,12 @@
 <template>
 
 	<div>
-
-		<breadcrumb-component :items="[
-			{ text: 'Usuarios', path: '/admin/user'},
-			{ text: 'Crear usuario', path: '/admin/user/create'}
-		]" />
+		
+		<breadcrumb-component 
+			:pages="[
+				{ link: $router.resolve({ name: 'AdminUsers' }).fullPath, title: 'Users'},
+				{ link: $router.resolve({ name: 'AdminCreateUser' }).fullPath, title: 'Create user'}
+			]"/>
 
 		<div class="flex justify-center items-center mt-8">
 				
@@ -13,7 +14,7 @@
 				
 				<div class="card bg-white dark:bg-slate-600 border rounded-lg px-8 pt-6 pb-8 mb-4 dark:border-slate-800">
 
-					<h2 class="text-4xl font-bold dark:text-white mb-6">Crear usuario</h2>
+					<h2 class="text-2xl font-bold dark:text-white mb-6">Create usuario</h2>
 					
 					<create-form 
 						@submit="formSubmit"/>
@@ -55,7 +56,7 @@
 
 				getPolicy('create').then( res => {
 
-					if(!res.data.create) {
+					if(!res.create) {
 
 						// this.$router.push({name: "NotAuthorized" });
 						
@@ -75,7 +76,7 @@
 
 					params: { 
 
-						id: payload.data.id 
+						id: payload.id 
 
 					} 
 

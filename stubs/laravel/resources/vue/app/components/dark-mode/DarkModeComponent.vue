@@ -37,6 +37,10 @@ export default {
         },
         checkTheme() {
             const theme = this.getCookie('theme');
+            if(!theme) {
+                this.toggleTheme();
+                return;
+            }
             if (theme === 'dark') {
                 document.body.classList.add('dark');
                 this.isDark = true;

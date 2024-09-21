@@ -1,0 +1,35 @@
+import { initFlowbite } from 'flowbite'
+import { closeDropdown, closeDrawer } from './utils.js'
+
+export const globalDirectivesRegistration = (app) => {
+
+	app.directive('flowbite', {
+	    mounted(el) {
+	        initFlowbite(el);
+	    }
+	});
+
+	app.directive('preline', {
+		mounted() {
+			setTimeout(() => {
+				window.HSStaticMethods.autoInit();
+			}, 1000);
+		}	
+	});
+
+	app.directive('close-dropdown', {
+		mounted(el, binding) {
+			const dropdown = binding.value.dropdown;
+			const trigger = binding.value.trigger;
+        	el.addEventListener('click', () => closeDropdown(dropdown, trigger));
+		}
+	});
+
+	app.directive('close-drawer', {
+		mounted(el, binding) {
+			const drawer = binding.value.drawer;
+			el.addEventListener('click', () => closeDrawer(drawer));
+		}
+	});
+
+}

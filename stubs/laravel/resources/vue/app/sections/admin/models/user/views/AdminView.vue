@@ -4,9 +4,10 @@
 
 		<div v-if="isHome">
 
-			<breadcrumb-component :items="[
-                { text: 'Usuarios', path: '/admin/user'}
-            ]" />
+			<breadcrumb-component 
+				:pages="[
+					{ link: $router.resolve({ name: 'AdminUsers' }).fullPath, title: 'Users'}
+				]"/>
 
 			<div  class="uk-section uk-section-xsmall">
 
