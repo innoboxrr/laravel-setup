@@ -2,7 +2,7 @@
 import { createApp } from 'vue'
 import App from '@app/App.vue'
 import router from '@router'
-import vuex from '@vuex'
+import store from '@store'
 import mixin from '@js/mixin.js'
 import { VueHttpRequestPlugin } from 'innoboxrr-http-request'
 import { globalComponentRegistration } from '@js/global-components.js'
@@ -12,7 +12,7 @@ import { globalPropertiesRegistration } from '@js/global-properties.js'
 // Vue App
 window.app = createApp(App);
 app.use(router);
-app.use(vuex);
+app.use(store);
 app.mixin(mixin);
 app.use(VueHttpRequestPlugin);
 

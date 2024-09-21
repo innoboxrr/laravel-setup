@@ -42,39 +42,8 @@ trait UserOperations
 
             // Other
             'avatar' => $this->meta('avatar'),
-            'profile_background' => $this->meta('profile_background'), 
+            'profile_background' => $this->meta('profile_background'),
 
-            // Bio
-            'salutation' => $this->meta('salutation'),
-            'bio_about' => $this->meta('bio_about'),
-            'bio_experience' => $this->meta('bio_experience'),
-            'bio_education' => $this->meta('bio_education'),
-            'bio_skills' => $this->meta('bio_skills'), 
-            'position' => $this->meta('position'),
-
-            // Teacher stats
-            'teacher_reviews' => $this->meta('teacher_reviews', 0), // Review observers
-            'teacher_rating' => $this->meta('teacher_rating', 0), // Review observers
-            'teacher_courses' => $this->meta('teacher_courses', 0), // Enrollment observers
-            'teacher_students' => $this->meta('teacher_students', 0), // Enrollment observers
-
-            // Student stats
-            'student_courses' => $this->meta('student_courses', 0), // Enrollment observers
-            'courses_in_progress' => $this->meta('courses_in_progress', 0), // Enrollment observers
-            'completed_courses' => $this->meta('completed_courses', 0), // Enrollment observers
-            'dedication_time' => $this->meta('dedication_time', 0), // Lecture observers
-            'comments_count' => $this->meta('comments_count', 0), // Comment observers
-
-            // Affiliate
-            'affiliate_user_id' => $this->meta('affiliate_user_id'), // Para el sistema de afiliados
-            'affiliate_code' => $this->meta('affiliate_code'), // Para el sistema de afiliados
-            'affiliate_earnings' => $this->meta('affiliate_earnings', 0), // Para el sistema de afiliados
-            'affiliate_paid' => $this->meta('affiliate_paid', 0), // Para el sistema de afiliados
-            'affiliate_pending' => $this->meta('affiliate_pending', 0), // Para el sistema de afiliados
-            'affiliate_withdrawn' => $this->meta('affiliate_withdrawn', 0), // Para el sistema de afiliados
-            'affiliate_withdrawn_amount' => $this->meta('affiliate_withdrawn_amount', 0), // Para el sistema de afiliados
-            'affiliate_withdrawn_date' => $this->meta('affiliate_withdrawn_date'), // Para el sistema de afiliados
-            'affiliate_withdrawn_method' => $this->meta('affiliate_withdrawn_method'), // Para el sistema de afiliados
         ];
     }
 
@@ -187,92 +156,4 @@ trait UserOperations
     {
         return $this->getPayload('blocked', 0) == 1;
     }
-
-    /**
-     * Check if the user is enrolled in a course
-     *
-     * @param  int|Course  $course
-     * @param  array  $status
-     * @param  array  $roles
-     */
-    public function isEnrolled($course, $statuses = ['active'], $roles = ['student'], $cache = true)
-    {
-        $course = $course instanceof Course ? $course : Course::findOrFail($course);
-
-        if(is_string($statuses)) {
-            $statuses = [$statuses];
-        }
-
-        if(is_string($roles)) {
-            $roles = [$roles];
-        }
-
-        sort($statuses);
-        sort($roles);
-        $statusesKey = implode('-', $statuses);
-        $rolesKey = implode('-', $roles);
-        $cacheRand = $cache ? '' : rand(1, 1000);
-        $cacheKey = "isEnrolled:course{$course->id}:statuses{$statusesKey}:roles{$rolesKey}:{$cacheRand}";
-
-        return Cache::remember($cacheKey, now()->addHours(24), function () use ($course, $roles, $statuses) {
-            return $this->enrollments()
-                ->where('course_id', $course->id)
-                ->where('start_at', '<=', now())
-                ->where(function ($query) {
-                    $query->whereNull('end_at')
-                        ->orWhere('end_at', '>=', now());
-                })
-                ->whereIn('role', $roles)
-                ->whereIn('status', $statuses)
-                ->exists();
-        });
-    }
-
-    public function enroll($course, $status = 'pending', $role = 'student', $end_at = null)
-    {
-        $course = $course instanceof Course ? $course : Course::findOrFail($course);
-
-        return $this->enrollments()->updateOrCreate([
-            'course_id' => $course->id,
-        ], [
-            'status' => $status,
-            'role' => $role,
-            'start_at' => now(),
-            'end_at' => $end_at,
-        ]);
-    }
-
-    public function hasActiveBootcamp($bootcampId): bool
-    {   
-        return $this->bootcamps()
-            ->wherePivot('bootcamp_id', $bootcampId)
-            ->wherePivot('status', 'active')
-            ->exists();
-    }
-
-    // DEPRECATED
-    public function isCommentViewer($comment)
-    {
-        return $comment->commentViewers()->where('user_id', $this->id)->exists();
-    }
-
-    public function updateStats($updateOnly = [])
-    {
-        $stats = collect([
-            'courses_in_progress' => $this->enrollments()->where('status', 'active')->count(),
-            'completed_courses' => $this->enrollments()->where('status', 'completed')->count(),
-            'dedication_time' => $this->enrollments()->sum('completed'),
-            'comments_count' => $this->comments()->count(),
-        ]);
-
-        $stats->each(function ($value, $key) use ($updateOnly) {
-            if (!empty($updateOnly) && !in_array($key, $updateOnly)) {
-                return;
-            }
-            $this->metas()->updateOrCreate(['key' => $key], ['value' => $value]);
-        });
-
-        $this->updatePayload();
-    }
-
 }

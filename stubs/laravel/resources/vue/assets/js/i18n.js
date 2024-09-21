@@ -1,3 +1,7 @@
+/*
+ * PASAR ESTOA UN PAQUETE
+ */
+
 let translations;
 let defaultLang = 'en';
 let locales;

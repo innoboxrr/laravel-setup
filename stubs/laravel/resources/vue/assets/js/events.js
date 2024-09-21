@@ -2,6 +2,8 @@
 /**
  * Para añadir un nuevo proveedor de píxeles, sigue los puntos marcados con "Add platform [#]".
  * Al añadir un nuevo evento se debe registrar en Events y en getEventName.
+ * 
+ * CUANDO ESTO ESTÉ COMPLETAMENTE TESTADO PASAR A UN PAQUETE INDEPENDIENTE
  */
 
 // IMPORTS

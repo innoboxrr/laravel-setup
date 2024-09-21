@@ -2,7 +2,7 @@
 
 namespace App\Models\Traits\Operations;
 
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
@@ -32,23 +32,20 @@ trait PermissionOperations
     {
         $permissions = [];
 
-        // Get all policy files from the Policies directory
-        $policyFiles = File::files(app_path('Policies'));
+        // Obtener todas las políticas registradas en la aplicación
+        $policies = Gate::policies();
 
-        foreach ($policyFiles as $policyFile) {
-            $policyClass = 'App\\Policies\\' . $policyFile->getBasename('.php');
+        foreach ($policies as $modelClass => $policyClass) {
             $reflection = new ReflectionClass($policyClass);
 
-            // Extract model name from policy class (e.g., UserPolicy -> User)
-            $modelName = Str::beforeLast($reflection->getShortName(), 'Policy');
+            // Obtener el nombre completo de la clase del modelo y convertirlo a kebab-case
+            $modelNamespace = str_replace('\\', '-', $modelClass); // Convertir los backslashes a guiones
+            $modelKebabCase = Str::kebab($modelNamespace); // Convertir a kebab-case
 
-            // Convert model name to kebab-case (e.g., User -> user)
-            $modelKebabCase = Str::kebab($modelName);
-
-            // Get all public methods from the policy class
+            // Obtener todos los métodos públicos de la clase de la política
             foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                if ($method->getName() !== 'before') { // Exclude the 'before' method
-                    // Convert method name to kebab-case (e.g., viewAny -> view-any)
+                if ($method->getName() !== 'before') { // Excluir el método 'before'
+                    // Convertir el nombre del método a kebab-case (e.g., viewAny -> view-any)
                     $permissionKebabCase = Str::kebab($method->getName());
 
                     $permissions[] = $modelKebabCase . '-' . $permissionKebabCase;
@@ -56,8 +53,7 @@ trait PermissionOperations
             }
         }
 
-        // Output or store the permissions array as needed
+        // Devolver la lista de permisos generada
         return $permissions;
     }
-
 }
