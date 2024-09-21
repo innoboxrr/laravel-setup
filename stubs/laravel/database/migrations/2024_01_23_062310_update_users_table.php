@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->longText('payload')->nullable()->after('password');
-            $table->foreignId('language_id')->nullable()->after('password')->constrained()->nullOnDelete();
             $table->softDeletes();
         });
     }
