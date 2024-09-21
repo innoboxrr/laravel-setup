@@ -176,7 +176,7 @@ class AppSetupCommand extends Command
         // De la App original elimianr las carpetas css y js
         $this->rrDir(resource_path('css'));
         $this->rrDir(resource_path('js'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/resources/vue', base_path('vue'));
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/resources/vue', dst: resource_path('vue'));
     }
 
     // VIEWS //
