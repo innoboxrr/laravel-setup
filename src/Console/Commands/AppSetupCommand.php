@@ -46,6 +46,7 @@ class AppSetupCommand extends Command
         $this->addPolicies();
         $this->addServices();
         $this->addSupport();
+        $this->addMigrations();
         $this->updateComposerJson();
         $this->addVue();
         $this->deleteWelcomeBladeFile();
@@ -196,6 +197,12 @@ class AppSetupCommand extends Command
     {
         $this->mkDir(base_path('app/Support'));
         $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Support', base_path('app/Support'));
+    }
+
+    // MIGRATIONS //
+    private function addMigrations()
+    {
+        $this->cpDir(__DIR__ . '/../../../stubs/laravel/database/migrations', base_path('database/migrations'));
     }
 
     // COMPOSER PACKAGES INSTALATION //
