@@ -7,7 +7,6 @@ use Symfony\Component\Process\Process;
 
 class AppInstallCommand extends Command
 {
-    
     /**
      * The name and signature of the console command.
      *
@@ -37,56 +36,43 @@ class AppInstallCommand extends Command
         }
 
         // Ejecutar composer install con todas las dependencias
-        $process = new Process(['composer', 'install']);
-        $process->run();
+        $this->runProcess(['composer', 'install'], 'Instalando dependencias de Composer...');
+        $this->runProcess(['npm', 'install'], 'Instalando dependencias de NPM...');
+        $this->runProcess(['php', 'artisan', 'route:json'], 'Generando JSON de rutas...');
+        $this->runProcess(['npm', 'run', 'build'], 'Compilando los assets...');
 
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        $process = new Process(['npm', 'install']);
-        $process->run();
-
-        // Verificar si el proceso se ejecutó correctamente
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        $process = new Process(['php', 'artisan', 'route:json']);
-        $process->run();
-
-        // Verificar si el proceso se ejecutó correctamente
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        $process = new Process(['npm', 'run', 'build']);
-        $process->run();
-
-        // Verificar si el proceso se ejecutó correctamente
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        $process = new Process(['cp', 'vendor/innoboxrr/larapack-generator/builder.example', 'builder']);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
+        // Copiar archivo builder
+        $this->runProcess(['cp', 'vendor/innoboxrr/larapack-generator/builder.example', 'builder'], 'Copiando archivo builder...');
 
         $this->replaceProvidersFiles();
         $this->registerServiceProvider();
         $this->registerAppConfig();
 
         $this->info('¡La instalación se ha completado con éxito!'); 
-
-       
     }
 
-    // PROVIDERS
+    private function runProcess(array $command, string $message)
+    {
+        $this->info($message);
+
+        $process = new Process($command);
+        $process->setTty(true); // Permite mostrar la salida en tiempo real
+        $process->setTimeout(null); // Sin límite de tiempo
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                $this->error($buffer); // Muestra los errores
+            } else {
+                $this->line($buffer); // Muestra la salida normal
+            }
+        });
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+    }
+
     private function replaceProvidersFiles()
     {
-
         $appServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AppServiceProvider.php.stub');
         $authServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AuthServiceProvider.php.stub');
         $eventServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/EventServiceProvider.php.stub');
@@ -115,5 +101,4 @@ class AppInstallCommand extends Command
         // Poner el contenido en el archivo bootstrap/providers.php
         file_put_contents(base_path('bootstrap/providers.php'), $providersFile);
     }
-
 }
