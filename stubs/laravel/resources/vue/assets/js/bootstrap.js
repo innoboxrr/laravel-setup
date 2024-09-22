@@ -49,8 +49,8 @@
 
 // SWIPER
     // import function to register Swiper custom elements
-    import { register as swiperRegister } from 'swiper/element/bundle';
-    swiperRegister();
+    // import { register as swiperRegister } from 'swiper/element/bundle';
+    // swiperRegister();
 
 // AXIOS
     
