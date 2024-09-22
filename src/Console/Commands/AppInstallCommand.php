@@ -60,7 +60,7 @@ class AppInstallCommand extends Command
         $process->setTimeout(null); // Sin límite de tiempo
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
-                $this->error($buffer); // Muestra los errores
+                $this->line($buffer); // Muestra los errores
             } else {
                 $this->line($buffer); // Muestra la salida normal
             }
