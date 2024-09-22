@@ -37,7 +37,7 @@ class AppInstallCommand extends Command
         }
 
         // Ejecutar composer install con todas las dependencias
-        $process = new Process(['composer', 'install -W']);
+        $process = new Process(['composer', 'install']);
         $process->run();
 
         if (!$process->isSuccessful()) {
