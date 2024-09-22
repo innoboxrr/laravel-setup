@@ -9,7 +9,7 @@ export default defineConfig({
     build: {
         minify: true, // Pending. Disable minification to make debugging easier
         target: 'esnext',
-        chunkSizeWarningLimit: 2048
+        chunkSizeWarningLimit: 2048,
     },
     
     plugins: [
@@ -65,6 +65,9 @@ export default defineConfig({
             '@plugins': '/resources/vue/assets/plugins',
             '@router': '/resources/vue/router',
             '@store': '/resources/vue/store',
+            '@admin': '/resources/vue/app/sections/admin',
+            '@models': '/resources/vue/app/sections/admin/models',
+            '@themes': '/resources/vue/app/themes',
         }
     }
 });

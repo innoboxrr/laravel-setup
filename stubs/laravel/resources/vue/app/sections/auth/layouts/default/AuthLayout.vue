@@ -13,8 +13,6 @@
 </template>
 
 <script>
-import { options } from '@fullcalendar/core/preact.js';
-
     export default {
         name: "AuthLayout",
     }
