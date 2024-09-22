@@ -149,7 +149,7 @@ class AppSetupCommand extends Command
         $editor->addParameter('require.innoboxrr/laravel-audit', '^1.0');
         $editor->addParameter('require.innoboxrr/laravel-auth', '^4.0');
         $editor->addParameter('require.innoboxrr/laravel-env-editor', 'dev-master');
-        $editor->addParameter('require.innoboxrr/laravel-notifications', '^1.7');
+        $editor->addParameter('require.innoboxrr/laravel-notifications', '^1.0');
         $editor->addParameter('require.innoboxrr/laravel-uploads', '^1.0');
         $editor->addParameter('require.innoboxrr/locale-generator', '^1.0');
         $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
