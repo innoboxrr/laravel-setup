@@ -31,7 +31,31 @@ class AppInstallCommand extends Command
 
         $this->info('Instalando dependencias...');
 
-        $process = new Process(['composer', 'update']);
+        // Eliminar lock file
+        if (file_exists(base_path('composer.lock'))) {
+            unlink(base_path('composer.lock'));
+        }
+
+        // Eliminar node_modules
+        if (file_exists(base_path('node_modules'))) {
+            $process = new Process(['rm', '-rf', 'node_modules']);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new \RuntimeException($process->getErrorOutput());
+            }
+        }
+
+        // Eliminar vendor
+        if (file_exists(base_path('vendor'))) {
+            $process = new Process(['rm', '-rf', 'vendor']);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new \RuntimeException($process->getErrorOutput());
+            }
+        }
+
+        // Ejecutar composer install con todas las dependencias
+        $process = new Process(['composer', 'install -W']);
         $process->run();
 
         if (!$process->isSuccessful()) {

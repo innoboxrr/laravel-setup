@@ -135,8 +135,6 @@ class AppSetupCommand extends Command
         $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Http', base_path('app/Http'));
     }
 
-
-
     // MIGRATIONS //
     private function addMigrations()
     {
@@ -193,7 +191,6 @@ class AppSetupCommand extends Command
         $bladeFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/views/app.blade.php.stub');
         file_put_contents(resource_path('views/app.blade.php'), $bladeFile);
     }
-
 
     // ROUTES //
     private function replaceWebRoutesFile()
