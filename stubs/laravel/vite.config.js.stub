@@ -14,9 +14,9 @@ export default defineConfig({
     
     plugins: [
         laravel([
-            'resources/js/bootstrap.js',
-            'resources/js/vue.js',
-            'resources/css/app.css'
+            'resources/vue/assets/js/bootstrap.js',
+            'resources/vue/assets/js/vue.js',
+            'resources/vue/assets/css/app.css'
         ]),
         vue({
             template: {
