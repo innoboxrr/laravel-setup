@@ -54,22 +54,30 @@ class AppInstallCommand extends Command
     private function runProcess(array $command, string $message)
     {
         $this->info($message);
-
+    
         $process = new Process($command);
-        $process->setTty(true); // Permite mostrar la salida en tiempo real
+    
+        // Solo habilita TTY si no es Windows
+        if (DIRECTORY_SEPARATOR !== '\\') {
+            $process->setTty(true); // Permite mostrar la salida en tiempo real en sistemas basados en Unix
+        }
+    
         $process->setTimeout(null); // Sin límite de tiempo
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
-                $this->line($buffer); // Muestra los errores
+                $this->warn(trim($buffer)); // Muestra los errores como advertencias (menos dramático que rojo)
             } else {
-                $this->line($buffer); // Muestra la salida normal
+                $this->line(trim($buffer)); // Muestra la salida normal
             }
         });
-
+    
         if (!$process->isSuccessful()) {
+            // Usar warn o line en lugar de error para que no se vea rojo
+            $this->warn(trim($process->getErrorOutput()));
             throw new \RuntimeException($process->getErrorOutput());
         }
     }
+    
 
     private function replaceProvidersFiles()
     {
