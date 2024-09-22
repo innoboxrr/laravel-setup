@@ -44,9 +44,6 @@ class AppSetupCommand extends Command
         $this->deleteWelcomeBladeFile();
         $this->createAppBladeFile();
         $this->replaceWebRoutesFile();
-        $this->replaceProvidersFiles();
-        $this->registerServiceProvider();
-        $this->registerAppConfig();
         $this->info('¡La configuración se ha completado con éxito!');
     }
 
@@ -197,38 +194,5 @@ class AppSetupCommand extends Command
     {
         $webRoutesFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/routes/web.php.stub');
         file_put_contents(base_path('routes/web.php'), $webRoutesFile);
-    }
-
-    // PROVIDERS
-    private function replaceProvidersFiles()
-    {
-
-        $appServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AppServiceProvider.php.stub');
-        $authServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AuthServiceProvider.php.stub');
-        $eventServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/EventServiceProvider.php.stub');
-        $broadcastServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/BroadcastServiceProvider.php.stub');
-        $routeServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/RouteServiceProvider.php.stub');
-
-        file_put_contents(base_path('app/Providers/AppServiceProvider.php'), $appServiceProvider);
-        file_put_contents(base_path('app/Providers/AuthServiceProvider.php'), $authServiceProvider);
-        file_put_contents(base_path('app/Providers/EventServiceProvider.php'), $eventServiceProvider);
-        file_put_contents(base_path('app/Providers/BroadcastServiceProvider.php'), $broadcastServiceProvider);
-        file_put_contents(base_path('app/Providers/RouteServiceProvider.php'), $routeServiceProvider);
-    }
-
-    private function registerAppConfig()
-    {
-        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub'
-        $appFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub');
-        // Poner el contenido en el archivo bootstrap/app.php
-        file_put_contents(base_path('bootstrap/app.php'), $appFile);
-    }
-
-    private function registerServiceProvider()
-    {
-        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub'
-        $providersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub');
-        // Poner el contenido en el archivo bootstrap/providers.php
-        file_put_contents(base_path('bootstrap/providers.php'), $providersFile);
     }
 }

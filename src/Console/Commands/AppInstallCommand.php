@@ -36,26 +36,8 @@ class AppInstallCommand extends Command
             unlink(base_path('composer.lock'));
         }
 
-        // Eliminar node_modules
-        if (file_exists(base_path('node_modules'))) {
-            $process = new Process(['rm', '-rf', 'node_modules']);
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new \RuntimeException($process->getErrorOutput());
-            }
-        }
-
-        // Eliminar vendor
-        if (file_exists(base_path('vendor'))) {
-            $process = new Process(['rm', '-rf', 'vendor']);
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new \RuntimeException($process->getErrorOutput());
-            }
-        }
-
         // Ejecutar composer install con todas las dependencias
-        $process = new Process(['composer', 'install -W']);
+        $process = new Process(['composer', 'install']);
         $process->run();
 
         if (!$process->isSuccessful()) {
@@ -92,9 +74,46 @@ class AppInstallCommand extends Command
             throw new \RuntimeException($process->getErrorOutput());
         }
 
+        $this->replaceProvidersFiles();
+        $this->registerServiceProvider();
+        $this->registerAppConfig();
+
         $this->info('¡La instalación se ha completado con éxito!'); 
 
        
+    }
+
+    // PROVIDERS
+    private function replaceProvidersFiles()
+    {
+
+        $appServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AppServiceProvider.php.stub');
+        $authServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AuthServiceProvider.php.stub');
+        $eventServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/EventServiceProvider.php.stub');
+        $broadcastServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/BroadcastServiceProvider.php.stub');
+        $routeServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/RouteServiceProvider.php.stub');
+
+        file_put_contents(base_path('app/Providers/AppServiceProvider.php'), $appServiceProvider);
+        file_put_contents(base_path('app/Providers/AuthServiceProvider.php'), $authServiceProvider);
+        file_put_contents(base_path('app/Providers/EventServiceProvider.php'), $eventServiceProvider);
+        file_put_contents(base_path('app/Providers/BroadcastServiceProvider.php'), $broadcastServiceProvider);
+        file_put_contents(base_path('app/Providers/RouteServiceProvider.php'), $routeServiceProvider);
+    }
+
+    private function registerAppConfig()
+    {
+        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub'
+        $appFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub');
+        // Poner el contenido en el archivo bootstrap/app.php
+        file_put_contents(base_path('bootstrap/app.php'), $appFile);
+    }
+
+    private function registerServiceProvider()
+    {
+        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub'
+        $providersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub');
+        // Poner el contenido en el archivo bootstrap/providers.php
+        file_put_contents(base_path('bootstrap/providers.php'), $providersFile);
     }
 
 }
