@@ -50,7 +50,7 @@ export const APP_VARS = {
 	inputClass: 'jsValidator mt-2 block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500 dark:ring-slate-600 dark:focus:ring-blue-400',
 	inputClassNoVal: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
 	
-	tinymceCdnGlobal: '/vendor/tinymce/tinymce.min.js'
+	tinymceCdnGlobal: '/vendor/tinymce/tinymce.min.js',
 	fileUploadUrl: '/lu/upload/file',
 
 };

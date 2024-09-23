@@ -8,8 +8,6 @@
 <script>
 	export default {
 		mounted() {
-			await this.$store.dispatch('langStore/langSetup');
-			this.$store.dispatch('optionsStore/optionsSetup');
 			this.$store.dispatch('authPages/checkAuth');
 		}
 	}

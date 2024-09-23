@@ -131,6 +131,7 @@
     import 'flowbite';
 
 // ECHO
+/*
     import Pusher from 'pusher-js';
     import Echo from 'laravel-echo';
 
@@ -158,10 +159,13 @@
             };
         },
     });
+*/
 
 // PrismJS
+/*
     import Prism from 'prismjs';
     import 'prismjs/themes/prism-okaidia.css';
     import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
     import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
     window.Prism = Prism;
+*/

@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { replaceWord, strlimit, slugify, removeTags, decodeEntities } from 'innoboxrr-js-libs/libs/string.js'
 import { numberFormat } from 'innoboxrr-js-libs/libs/number.js'
 import { formatSeconds } from 'innoboxrr-js-libs/libs/time.js'
-import { showLoader, hideLoader, organizeCategories, mt, translateModel, formatDate } from '@js/utils.js';
+import { showLoader, hideLoader, mt, translateModel, formatDate } from '@js/utils.js';
 import { APP_VARS } from '@js/env.js'
 
 export default {

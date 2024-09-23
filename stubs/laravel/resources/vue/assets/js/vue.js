@@ -19,7 +19,7 @@ app.use(VueHttpRequestPlugin);
 // Registro Global de componentes
 globalComponentRegistration(app);
 globalDirectivesRegistration(app);
-globalPropertiesRegistration(app, vuex);
+globalPropertiesRegistration(app, store);
 
 // Vue Model
 
