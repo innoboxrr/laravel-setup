@@ -67,7 +67,6 @@ export default defineConfig({
             '@store': '/resources/vue/store',
             '@admin': '/resources/vue/app/sections/admin',
             '@models': '/resources/vue/app/sections/admin/models',
-            '@themes': '/resources/vue/app/themes',
         }
     }
 });
