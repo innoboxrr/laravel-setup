@@ -64,7 +64,7 @@ class ConfigureDomain extends Command
 NET SESSION >nul 2>&1
 if %errorLevel% == 0 (
     echo Modificando el archivo hosts...
-    echo {$lineToAdd} >> \"{$hostsFilePath}\"
+    echo 127.0.0.1 {$domain} # Add by Laravel Setup >> \"{$hostsFilePath}\"
     exit /b
 ) else (
     echo Solicitando permisos de administrador...
@@ -86,10 +86,10 @@ if %errorLevel% == 0 (
         if ($returnVar == 0) {
             $this->info('El archivo hosts ha sido modificado correctamente.');
             // Eliminar el archivo .bat después de la ejecución
-            if (File::exists($batFilePath)) {
-                File::delete($batFilePath);
-                $this->info('El archivo update_hosts.bat ha sido eliminado.');
-            }
+        if (File::exists($batFilePath)) {
+            File::delete($batFilePath);
+            $this->info('El archivo update_hosts.bat ha sido eliminado.');
+        }
         } else {
             $this->error('No se pudo modificar el archivo hosts. Por favor, ejecuta el comando como administrador.');
         }
