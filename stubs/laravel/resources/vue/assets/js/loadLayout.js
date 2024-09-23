@@ -19,6 +19,8 @@ export const loadLayout = (layouts, layoutName) => {
         }
     }
 
+    console.log(layout);
+
     // Si no se encontró el layout por defecto, lanzar un error
     if (!layout) {
         throw new Error(`No se pudo encontrar el layout ${layoutName} ni el layout por defecto.`);

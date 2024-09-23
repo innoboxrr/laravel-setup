@@ -13,37 +13,13 @@
                 </a>
                 <ul class="space-y-2 pb-2">
                     <li>
-                        <router-link
-                            :to="{
-                                name: 'AdminStart'
-                            }"
+                        <a
+                            href="/"
                             class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                             data-drawer-target="topbar-drawer"
                             data-drawer-toggle="topbar-drawer">
                             <i class="fa-solid fa-house fa-md py-1 mx-auto"></i>
-                        </router-link>
-                    </li>
-                    <li>
-                        <router-link
-                            :to="{
-                                name: 'AppBrowser'
-                            }"
-                            class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                            data-drawer-target="topbar-drawer"
-                            data-drawer-toggle="topbar-drawer">
-                            <i class="fa-solid fa-magnifying-glass fa-md py-1 mx-auto"></i>
-                        </router-link>  
-                    </li>
-                    <li v-if="fileManager">
-                        <router-link
-                            :to="{
-                                name: 'FileManager'
-                            }"
-                            class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                            data-drawer-target="topbar-drawer"
-                            data-drawer-toggle="topbar-drawer">
-                            <i class="fa-regular fa-folder-open fa-md py-1 mx-auto"></i>
-                        </router-link>  
+                        </a>
                     </li>
                     <!-- Docs link -->
                     <li>
@@ -55,77 +31,49 @@
                             <i class="fa-solid fa-book-open fa-md py-1 mx-auto"></i>
                         </a>
                     </li>
-                    <li v-if="$store.getters['authPages/isAdmin']">
+                    <li>
                         <a
                             class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                             @click="toggleSidenav('adminCrud')">
                             <i class="fa-solid fa-screwdriver-wrench fa-md py-1 mx-auto"></i>
                         </a>
                     </li>
-                    <li v-if="$store.getters['authPages/isAdmin']">
+                    <li>
+                        <a
+                            class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            @click="toggleSidenav('baseSidenav')">
+                            <i class="fa-solid fa-cog fa-md py-1 mx-auto"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a href="/log-viewer" target="_blank" class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fa-solid fa-bug fa-md py-1 mx-auto"></i>
                         </a>
                     </li>
-                    <li v-if="$store.getters['authPages/isAdmin']">
+                    <li>
                         <a href="/env-editor" target="_blank" class="flex items-center p-2 text-gray-400 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fa-solid fa-cog fa-md py-1 mx-auto"></i>
                         </a>
                     </li>
                 </ul>
-                <ul 
-                    v-if="$store.getters['authPages/isAdmin'] || 
-                        $store.getters['authPages/isTeacher'] || 
-                        $store.getters['authPages/isEditTeacher'] ||
-                        $store.getters['authPages/isHeadTeacher']"
-                    class="space-y-2 pt-2">
+                <ul class="space-y-2 pt-2">
                     <li>
-                        <router-link
-                            :to="{name: 'ProfileProductCourse'}"
+                        <a
+                            href="/profile"
                             :uk-tooltip="`title: ${__('My courses')}; pos: left`"
                             class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                             data-drawer-target="topbar-drawer"
                             data-drawer-toggle="topbar-drawer">
                             <i class="fa-solid fa-graduation-cap fa-md py-1 mx-auto"></i>
-                        </router-link>
-                    </li> 
-                    <li>
-                        <router-link 
-                            :to="{name: 'ProfileProductTestkin'}"
-                            uk-tooltip="title: My exams; pos: left"
-                            class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:no-underline"
-                            data-drawer-target="topbar-drawer"
-                            data-drawer-toggle="topbar-drawer">
-                            <i class="fa-solid fa-clipboard-question fa-md py-1 mx-auto"></i>
-                            <span class="sr-only"></span>
-                        </router-link>
-                    </li>
-                    <li>
-                        <router-link 
-                            :to="{name: 'ProfileProductVoucher'}"
-                            uk-tooltip="title: My vouchers; pos: left"
-                            class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:no-underline"
-                            data-drawer-target="topbar-drawer"
-                            data-drawer-toggle="topbar-drawer">
-                            <i class="fa-solid fa-ticket fa-md py-1 mx-auto"></i>
-                            <span class="sr-only"></span>
-                        </router-link>
-                    </li> 
-                    <li>
-                        <router-link 
-                            :to="{name: 'ProfileProductQuiz'}"
-                            uk-tooltip="title: Mys Quizzes; pos: left"
-                            class="flex items-center p-2 text-gray-500 rounded-lg transition duration-75 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:no-underline"
-                            data-drawer-target="topbar-drawer"
-                            data-drawer-toggle="topbar-drawer">
-                            <i class="fa-solid fa-list-check fa-md py-1 mx-auto"></i>
-                            <span class="sr-only"></span>
-                        </router-link>
-                    </li>       
+                        </a>
+                    </li>     
                 </ul>
             </div>
             <admin-crud-sidenav 
                 v-if="secondarySidenav === 'adminCrud'" 
+                @hideSidenav="hideSidenav" />
+            <base-sidenav 
+                v-if="secondarySidenav === 'baseSidenav'" 
                 @hideSidenav="hideSidenav" />
         </aside>
     </div>
@@ -133,16 +81,16 @@
 
 <script>
 
-    import {
-        AdminCrudSidenav
-    } from './partials/secondary-sidenav';
+    import { AdminCrudSidenav } from './partials/secondary-sidenav';
+    import { BaseSidenav } from './partials/secondary-sidenav';
     
     export default {
 
         name: 'LeftSidebarComponent',
 
         components: {
-            AdminCrudSidenav
+            AdminCrudSidenav,
+            BaseSidenav,
         },
 
         data() {
