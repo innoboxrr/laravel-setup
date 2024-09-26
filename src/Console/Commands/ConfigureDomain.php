@@ -173,7 +173,7 @@ server {
 
             // Reemplazar APP_URL y SESSION_DOMAIN
             $envContent = preg_replace('/APP_URL=.*\n/', "APP_URL=https://{$domain}\n", $envContent);
-            $envContent = preg_replace('/SESSION_DOMAIN=.*\n/', "SESSION_DOMAIN={$domain}\n", $envContent);
+            $envContent = preg_replace('/SESSION_DOMAIN=.*\n/', "SESSION_DOMAIN=.{$domain}\n", $envContent);
 
             // Escribir los cambios en el archivo .env
             File::put($envFilePath, $envContent);
