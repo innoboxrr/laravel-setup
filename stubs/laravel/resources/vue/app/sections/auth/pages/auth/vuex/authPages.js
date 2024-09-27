@@ -114,12 +114,12 @@ export default {
 		},
 
 		setUser(state, user) {
-			state.isAuth = user !== null;
-			state.isConfirm = user !== null && user.email_verified_at !== null;
+			state.isAuth = user !== undefined;
+			state.isConfirm = user !== undefined && user.email_verified_at !== undefined;
 			state.user = user;
-			state.userRoles = user !== null ? user.roles.map(role => role.name) : ['student'];
-			state.roles = user !== null ? user.roles : [];
-			state.permissions = user !== null ? user.permissions : [];
+			state.userRoles = user !== undefined ? user.roles.map(role => role.name) : ['student'];
+			state.roles = user !== undefined ? user.roles : [];
+			state.permissions = user !== undefined ? user.permissions : [];
 		}
 	},
 
