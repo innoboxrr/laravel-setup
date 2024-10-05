@@ -132,9 +132,9 @@
     import {
         TextInputComponent,
         ButtonComponent,
-        ModelSearchInputComponent
+        ModelSearchInputComponent,
+        AvatarInputComponent
     } from 'innoboxrr-form-elements'
-    import { AvatarInputComponent } from '@app/components/forms'
 
     export default {
         components: {
