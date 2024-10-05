@@ -1,38 +1,60 @@
-# AppSetupCommand
+# LaravelSetUp: ¡Pon tu aplicación Laravel en marcha en minutos!
 
-El comando `AppSetupCommand` es una herramienta útil para configurar una nueva aplicación de Laravel. Este comando se encarga de realizar varias tareas de configuración que pueden ser tediosas de realizar manualmente.
+¿Estás cansado de configurar manualmente una aplicación Laravel cada vez que inicias un nuevo proyecto? ¡Te presentamos **LaravelSetUp** de **InnoboxRR**! Esta poderosa herramienta te permite arrancar tu desarrollo en **Laravel** en cuestión de **minutos**, automatizando todas las configuraciones tediosas y necesarias para que puedas concentrarte en lo que realmente importa: **crear algo increíble**.
 
-## Funcionalidad
+Con solo un par de comandos, tendrás un proyecto Laravel completamente listo, equipado con configuraciones optimizadas, archivos esenciales y paquetes clave para acelerar tu flujo de trabajo.
 
-El comando `AppSetupCommand` realiza las siguientes tareas de configuración:
+## ¿Qué hace LaravelSetUp por ti?
 
- - Verifica si NodeJS está instalado en el sistema y si la versión es compatible con la aplicación de Laravel.
- - Reemplaza el archivo package.json con una versión predefinida.
- - Reemplaza el archivo vite.config.js con una versión predefinida.
- - Agrega el archivo app/Helpers/app.php a la sección de autoload del archivo composer.json.
- - Agrega el archivo app/Http/Controllers/AppController.php a la aplicación de Laravel.
- - Agrega los paquetes innoboxrr/routes-to-json y innoboxrr/laravel-auth al archivo composer.json.
- - Agrega los archivos CSS y JS predefinidos a la aplicación de Laravel.
- - Agrega el archivo resources/json/nav.json a la aplicación de Laravel.
- - Elimina el archivo resources/views/welcome.blade.php.
- - Crea el archivo resources/views/app.blade.php.
- - Copia el directorio resources/vue a la aplicación de Laravel.
- - Reemplaza el archivo routes/web.php con una versión predefinida.
+**LaravelSetUp** realiza un conjunto completo de configuraciones en tu aplicación Laravel que, de otro modo, tomarían tiempo y esfuerzo. Este paquete te facilita la vida realizando tareas como:
 
+- **Verificación de NodeJS**: Asegúrate de que tienes la versión adecuada de NodeJS instalada para que tu aplicación Laravel funcione perfectamente.
+- **Optimización de `package.json` y `vite.config.js`**: Reemplaza estos archivos con versiones predefinidas y optimizadas para el desarrollo moderno.
+- **Soporte para helpers**: Agrega el archivo `app/Helpers/app.php` a la sección de autoload en `composer.json`, asegurando que tus helpers personalizados siempre estén disponibles.
+- **Controladores precargados**: Añade el archivo `app/Http/Controllers/AppController.php` para que puedas empezar con controladores listos para usar.
+- **Instalación de paquetes clave**: Integra automáticamente los paquetes `innoboxrr/routes-to-json` y `innoboxrr/laravel-auth` para mejorar la gestión de rutas y autenticación en tu aplicación.
+- **Estilos y scripts preconfigurados**: Agrega archivos CSS y JS predefinidos para que tengas un punto de partida con los mejores estilos y scripts para tu aplicación.
+- **Archivos JSON de navegación**: Carga automáticamente un archivo `resources/json/nav.json` para configurar la navegación de tu aplicación.
+- **Elimina el archivo innecesario** `welcome.blade.php` y lo reemplaza con un archivo base `app.blade.php` listo para el desarrollo.
+- **Copia la estructura Vue.js**: Integra automáticamente el directorio `resources/vue` para que tengas tu frontend preparado para empezar a construir interfaces dinámicas.
+- **Actualización de rutas**: Reemplaza el archivo `routes/web.php` con una versión mejorada y optimizada para tu flujo de trabajo.
 
-## Instrucciones de uso
+## ¿Cómo usar LaravelSetUp?
 
-Para utilizar el comando `AppSetupCommand`, debes ejecutar el siguiente comando en la terminal:
+Configurar tu aplicación Laravel nunca fue tan fácil. Solo necesitas ejecutar los siguientes comandos en tu terminal:
 
-`php artisan app:setup`
+### Paso 1: Configurar la aplicación
 
+```bash
+php artisan app:setup
+```
+Este comando configurará todos los aspectos clave de tu aplicación Laravel para que esté lista en minutos.
 
-Este comando ejecutará todas las tareas de configuración descritas anteriormente.
+### Paso 2: Instalar los paquetes
+```bash
+php artisan app:install
+```
+Instala automáticamente todos los paquetes y configuraciones necesarias para tu aplicación.
 
-Después ejecuta el comando: 
+### Paso 3: Configuración del dominio
+```bash
+php artisan configure:domain mydomain.test
+```
+Configura el dominio que utilizarás para tu entorno de desarrollo en Laravel.
 
-`php artisan app:install`
+### Paso 4: Compilar tus assets
+Para producción:
 
-## Nota
+```bash
+npm run build
+```
 
-Este comando debe ser utilizado con precaución, ya que realiza cambios importantes en la aplicación de Laravel. Si no estás seguro de lo que estás haciendo, es recomendable que realices una copia de seguridad de la aplicación antes de ejecutar este comando.
+Para desarrollo:
+
+```bash
+npm run dev
+```
+
+## Advertencia
+
+**LaravelSetUp** está diseñado únicamente para ser utilizado durante el **setup inicial** de la aplicación. Una vez configurada tu aplicación, **no debe ejecutarse nuevamente**, ya que podría sobrescribir archivos importantes y causar daños en la configuración existente. Asegúrate de usarlo solo al inicio del proyecto y de realizar una copia de seguridad antes de su uso en cualquier entorno.

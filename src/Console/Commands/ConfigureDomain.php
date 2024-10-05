@@ -104,7 +104,7 @@ if %errorLevel% == 0 (
         $nginxConfigPath = 'C:\laragon\etc\nginx\sites-enabled\\' . $domain . '.conf';
 
         // Obtener la ruta pública de la aplicación Laravel actual
-        $rootPath = public_path();
+        $rootPath = str_replace('\\', '/', public_path());
 
         // Contenido del archivo de configuración de Nginx para el nuevo dominio
         $nginxConfigContent = "

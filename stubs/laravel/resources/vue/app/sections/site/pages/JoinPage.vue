@@ -1,3 +1,3 @@
 <template>
-    <theme-manager :data="option('builder.join')" />
+    <theme-manager :data="option('theme.join')" />
 </template>

@@ -1,3 +1,3 @@
 <template>
-    <theme-manager :data="option('builder.home')" />
+    <theme-manager :data="option('theme.home')" />
 </template>

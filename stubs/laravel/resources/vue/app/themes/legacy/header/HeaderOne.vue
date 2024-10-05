@@ -127,7 +127,7 @@
                         <li>
                             <router-link
                                 :to="{
-                                    name: 'AppBrowser'
+                                    path: '/'
                                 }"
                                 class="text-white hover:text-blue-100">
                                 {{ __('Browser') }}

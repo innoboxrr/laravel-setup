@@ -3,7 +3,7 @@ import DarkModeComponent from '@app/components/dark-mode';
 import BreadcrumbComponent from '@app/components/breadcrumbs';	
 import ModalComponent from '@app/components/modal';
 import JsonViewer from '@app/components/json-viewer';
-import { InputErrorComponent } from '@app/components/forms';
+import ThemeManager from '@app/components/theme-manager';
 
 import { 
 	UserDropdownComponent,
@@ -24,7 +24,7 @@ const globalComponentRegistration = (app) => {
 	app.component('dropdown-button-component', DropdownButtonComponent);
 	app.component('modal-component', ModalComponent);
 	app.component('json-viewer-component', JsonViewer);
-	app.component('input-error-component', InputErrorComponent);
+	app.component('theme-manager', ThemeManager);
 }
 
 export {
