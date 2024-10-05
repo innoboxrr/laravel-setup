@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Innoboxrr\LaravelSetup\Console\Commands\AppSetupCommand;
 use Innoboxrr\LaravelSetup\Console\Commands\AppInstallCommand;
 use Innoboxrr\LaravelSetup\Console\Commands\ConfigureDomain;
+use Innoboxrr\LaravelSetup\Console\Commands\InitCommand;
 
 class LaravelSetupServiceProvider extends ServiceProvider
 {
@@ -33,7 +34,8 @@ class LaravelSetupServiceProvider extends ServiceProvider
         $this->commands([
             AppSetupCommand::class,
             AppInstallCommand::class,
-            ConfigureDomain::class
+            ConfigureDomain::class,
+            InitCommand::class
         ]);
 
     }
