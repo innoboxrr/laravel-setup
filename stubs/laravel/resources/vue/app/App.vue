@@ -8,6 +8,7 @@
 <script>
 	export default {
 		mounted() {
+			this.$store.dispatch('optionsStore/optionsSetup');
 			this.$store.dispatch('authPages/checkAuth');
 		}
 	}

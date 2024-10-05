@@ -40,6 +40,8 @@ class AppInstallCommand extends Command
         $this->runProcess(['npm', 'install'], 'Instalando dependencias de NPM...');
         $this->runProcess(['php', 'artisan', 'route:json'], 'Generando JSON de rutas...');
         $this->runProcess(['npm', 'run', 'build'], 'Compilando los assets...');
+        $this->runProcess(['php', 'artisan', 'migrate', '--force'], 'Migrando la base de datos...');
+        $this->runProcess(['php', 'artisan', 'options:seed'], 'Sembrando opciones...');
 
         // Copiar archivo builder
         $this->runProcess(['cp', 'vendor/innoboxrr/larapack-generator/builder.example', 'builder'], 'Copiando archivo builder...');
