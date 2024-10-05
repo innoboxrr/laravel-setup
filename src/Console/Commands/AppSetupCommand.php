@@ -158,6 +158,7 @@ class AppSetupCommand extends Command
         $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
         $editor->addParameter('require.innoboxrr/search-surge', '^2.0');
         $editor->addParameter('require.innoboxrr/traits', '^1.0');
+        $editor->addParameter('require.innoboxrr/laravel-option', '^0.0');
         $editor->addParameter('require.maatwebsite/excel', '^3.1'); // Excel
         $editor->addParameter('require.opcodesio/log-viewer', '^3.0'); // Excel
         $editor->addParameter('require.league/flysystem-aws-s3-v3', '^3.0'); // AWS S3
