@@ -1,3 +1,3 @@
 <template>
-    <theme-manager :data="option('builder.terms')" />
+    <theme-manager :data="option('theme.terms')" />
 </template>

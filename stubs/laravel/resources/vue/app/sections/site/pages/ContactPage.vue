@@ -1,3 +1,3 @@
 <template>
-    <theme-manager :data="option('builder.contact')" />
+    <theme-manager :data="option('theme.contact')" />
 </template>

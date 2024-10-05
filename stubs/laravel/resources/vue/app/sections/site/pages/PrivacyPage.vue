@@ -1,3 +1,3 @@
 <template>
-    <theme-manager :data="option('builder.privacy')" />
+    <theme-manager :data="option('theme.privacy')" />
 </template>
