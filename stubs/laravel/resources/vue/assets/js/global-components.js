@@ -15,7 +15,6 @@ import {
 
 
 const globalComponentRegistration = (app) => {
-
 	// Ej: app.component('Alias', Name);
 	app.component('dark-mode-component', DarkModeComponent);
 	app.component('breadcrumb-component', BreadcrumbComponent);
