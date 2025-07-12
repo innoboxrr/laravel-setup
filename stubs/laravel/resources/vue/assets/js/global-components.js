@@ -4,6 +4,7 @@ import BreadcrumbComponent from '@app/components/breadcrumbs';
 import ModalComponent from '@app/components/modal';
 import JsonViewer from '@app/components/json-viewer';
 import ThemeManager from '@app/components/theme-manager';
+import InputErrorComponent from 'innoboxrr-form-elements'
 
 import { 
 	UserDropdownComponent,
@@ -14,7 +15,6 @@ import {
 
 
 const globalComponentRegistration = (app) => {
-
 	// Ej: app.component('Alias', Name);
 	app.component('dark-mode-component', DarkModeComponent);
 	app.component('breadcrumb-component', BreadcrumbComponent);
@@ -25,6 +25,7 @@ const globalComponentRegistration = (app) => {
 	app.component('modal-component', ModalComponent);
 	app.component('json-viewer-component', JsonViewer);
 	app.component('theme-manager', ThemeManager);
+	app.component('input-error-component', InputErrorComponent);
 }
 
 export {

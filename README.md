@@ -23,6 +23,8 @@ Con solo un par de comandos, tendrás un proyecto Laravel completamente listo, e
 
 Configurar tu aplicación Laravel nunca fue tan fácil. Solo necesitas ejecutar los siguientes comandos en tu terminal:
 
+## Opción B.
+
 ### Paso 1: Configurar la aplicación
 
 ```bash
@@ -43,6 +45,27 @@ php artisan configure:domain mydomain.test
 Configura el dominio que utilizarás para tu entorno de desarrollo en Laravel.
 
 ### Paso 4: Compilar tus assets
+Para producción:
+
+```bash
+npm run build
+```
+
+Para desarrollo:
+
+```bash
+npm run dev
+```
+
+## Opción B (Beta):
+
+Si prefieres una intalación más rápida puedes ejecutar simplemente:
+
+```bash
+php artisan app:init mydomain.test
+``` 
+
+Y después compilar tus assets
 Para producción:
 
 ```bash

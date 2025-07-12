@@ -42,6 +42,7 @@ class AppInstallCommand extends Command
         $this->runProcess(['npm', 'run', 'build'], 'Compilando los assets...');
         $this->runProcess(['php', 'artisan', 'migrate', '--force'], 'Migrando la base de datos...');
         $this->runProcess(['php', 'artisan', 'options:seed'], 'Sembrando opciones...');
+        $this->runProcess(['php', 'artisan', 'vendor:publish', '--provider=Innoboxrr\\LaravelOptions\\Providers\\AppServiceProvider'], 'Publicando archivos del paquete laravel-options...');
 
         // Copiar archivo builder
         $this->runProcess(['cp', 'vendor/innoboxrr/larapack-generator/builder.example', 'builder'], 'Copiando archivo builder...');
