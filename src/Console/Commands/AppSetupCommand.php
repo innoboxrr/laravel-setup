@@ -269,6 +269,12 @@ class AppSetupCommand extends Command
         $editor->addOrUpdateParameter('VITE_MICROSOFT_LOGIN', 'true');
         $editor->addOrUpdateParameter('VITE_GOOGLE_LOGIN', 'true');
         $editor->addOrUpdateParameter('VITE_FACEBOOK_LOGIN', 'true');
+
+        $editor->addOrUpdateParameter('VITE_SSL_KEY', 'C:/laragon/etc/ssl/laragon.key');
+        $editor->addOrUpdateParameter('VITE_SSL_CERT', 'C:/laragon/etc/ssl/laragon.crt');
+        $editor->addOrUpdateParameter('VITE_DEV_SERVER_HOST', 'localhost');
+        $editor->addOrUpdateParameter('VITE_DEV_SERVER_PORT', '5173');
+        $editor->addOrUpdateParameter('VITE_DEV_SERVER_CORS_ORIGIN', '*');
     }
 
 
