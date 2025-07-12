@@ -23,7 +23,7 @@ Con solo un par de comandos, tendrás un proyecto Laravel completamente listo, e
 
 Configurar tu aplicación Laravel nunca fue tan fácil. Solo necesitas ejecutar los siguientes comandos en tu terminal:
 
-## Opción B.
+## Opción A.
 
 ### Paso 1: Configurar la aplicación
 

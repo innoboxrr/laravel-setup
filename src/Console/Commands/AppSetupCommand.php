@@ -195,6 +195,9 @@ class AppSetupCommand extends Command
         $editor->addOrUpdateParameter('APP_MAINTENANCE_DRIVER', 'file');
         $editor->addOrUpdateParameter('# APP_MAINTENANCE_STORE', 'database');
         $editor->addOrUpdateParameter('BCRYPT_ROUNDS', '12');
+
+        // Cli server
+        $editor->addOrUpdateParameter('PHP_CLI_SERVER_WORKERS', '4');
         
         // Configuración de Logs
         $editor->addOrUpdateParameter('LOG_CHANNEL', 'stack');
