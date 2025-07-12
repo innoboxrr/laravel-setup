@@ -277,8 +277,6 @@ class AppSetupCommand extends Command
         $editor->addOrUpdateParameter('VITE_DEV_SERVER_CORS_ORIGIN', '*');
     }
 
-
-
     // CSS //
     private function addVue()
     {
