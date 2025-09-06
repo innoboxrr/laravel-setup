@@ -11,7 +11,7 @@ const store = createStore({
     ],
 });
 
-const files = import.meta.globEager("/resources/vue/**/vuex/*.js");
+const files = import.meta.glob("/resources/vue/**/vuex/*.js", { eager: true });
 
 Object.keys(files).forEach((filePath) => {
     const moduleDefinition = files[filePath].default;

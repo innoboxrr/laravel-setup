@@ -31,7 +31,7 @@
 // LOCALE
 
     import lang, {setTranslations, setLocale} from '@js/i18n.js'
-    setTranslations(import.meta.globEager('/resources/locales/*.json'));
+    setTranslations(import.meta.glob('/resources/locales/*.json', { eager: true }));
     let locale = document.querySelector('html').getAttribute('lang') ?? 'en';
     setLocale(locale); 
     window.t = lang;
