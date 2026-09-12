@@ -1,14 +1,13 @@
 name: Tests
 
-# La suite se define una vez, en innoboxrr/.github, y aqui solo se llama. Corre
-# en los pull requests y, desde bump-patch.yml, antes de cada tag: si es roja,
-# no se publica nada.
+# La definicion vive en innoboxrr/.github para que sea la misma en todo el
+# ecosistema: instala, comprueba la sintaxis, audita contra la linea base y
+# corre la suite. Aqui solo se declara cuando corre.
 on:
+    push:
+        branches: [master]
     pull_request:
-    workflow_call:
 
 jobs:
     tests:
         uses: innoboxrr/.github/.github/workflows/php-tests.yml@main
-        with:
-            tests-required: false
