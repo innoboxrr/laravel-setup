@@ -1,0 +1,14 @@
+name: Tests
+
+# La suite se define una vez, en innoboxrr/.github, y aqui solo se llama. Corre
+# en los pull requests y, desde bump-patch.yml, antes de cada tag: si es roja,
+# no se publica nada.
+on:
+    pull_request:
+    workflow_call:
+
+jobs:
+    tests:
+        uses: innoboxrr/.github/.github/workflows/php-tests.yml@main
+        with:
+            tests-required: false

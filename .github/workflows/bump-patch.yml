@@ -1,19 +1,39 @@
 name: Bump Semantic Tag on Master
 
+# EL TAG NO SE CREA SI LA SUITE NO ESTA VERDE EN ESE COMMIT.
+#
+# Antes este workflow etiquetaba en cada push a master sin correr nada, y ese
+# tag es exactamente lo que una aplicacion instala con `composer update`.
+# Publicar una version rota es peor que tumbar un deploy: el deploy se
+# reintenta, la version publicada ya la instalo alguien.
+#
+# `needs` y no `workflow_run`, por lo mismo que en rvoe-manager: la dependencia
+# vive en este archivo y falla cerrada. Si la suite es roja, el job del tag ni
+# arranca; no depende de un nombre de workflow ni de un filtro de conclusion.
+#
+# Mientras el paquete no tenga tests, la suite comprueba al menos que instala y
+# que compila en cada PHP de la matriz.
 on:
     push:
         branches:
             - master
 
 jobs:
+    tests:
+        uses: ./.github/workflows/tests.yml
+
     bump-version:
+        needs: tests
         runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v5
               with:
-                  fetch-depth: 0  # Necesario para obtener todos los tags
+                  fetch-depth: 0
 
             - name: Set up Git
               run: |
@@ -23,7 +43,14 @@ jobs:
             - name: Get latest tag and bump version
               id: bump
               run: |
-                  latestTag=$(git tag --sort=-creatordate | head -n 1)
+                  # Orden semver real y sin el prefijo "v". Antes se ordenaba
+                  # por fecha de creacion, asi que un tag antiguo creado tarde
+                  # pasaba por el ultimo.
+                  latestTag=$(git tag \
+                      | sed 's/^v//' \
+                      | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+                      | sort -t. -k1,1n -k2,2n -k3,3n \
+                      | tail -n 1)
 
                   if [ -z "$latestTag" ]; then
                       major=0
@@ -32,7 +59,6 @@ jobs:
                   else
                       IFS='.' read -r major minor patch <<< "$latestTag"
 
-                      # Obtener mensaje del último commit
                       commitMessage=$(git log -1 --pretty=%B)
 
                       if [[ "$commitMessage" == *#major* ]]; then
@@ -47,12 +73,16 @@ jobs:
                       fi
                   fi
 
-                  newTag="$major.$minor.$patch"
-
-                  echo "✅ Nuevo tag: $newTag"
-                  echo "new_tag=$newTag" >> "$GITHUB_OUTPUT"
+                  echo "new_tag=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
 
             - name: Create and push tag
               run: |
-                  git tag ${{ steps.bump.outputs.new_tag }}
-                  git push origin ${{ steps.bump.outputs.new_tag }}
+                  newTag="${{ steps.bump.outputs.new_tag }}"
+
+                  if git ls-remote --tags origin "refs/tags/$newTag" | grep -q "$newTag"; then
+                      echo "El tag $newTag ya existe en origin; no se vuelve a crear."
+                      exit 0
+                  fi
+
+                  git tag "$newTag"
+                  git push origin "$newTag"
