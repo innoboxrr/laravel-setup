@@ -197,6 +197,10 @@ PHP);
             '--root' => base_path(),
         ]);
 
+        $this->larapack('larapack:event-service-provider', [
+            '--root' => base_path(),
+        ]);
+
         // La política generada nace cerrada; el perfil necesita que cada quien
         // vea y edite su propia cuenta. Las políticas son código de la
         // aplicación, así que LaraPack no la vuelve a pisar al regenerar.

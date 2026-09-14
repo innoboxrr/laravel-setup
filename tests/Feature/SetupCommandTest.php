@@ -81,6 +81,9 @@ final class SetupCommandTest extends TestCase
         $this->assertFileExists($this->project.'/app/Http/Controllers/UserController.php');
         $this->assertFileExists($this->project.'/app/Providers/RouteServiceProvider.php');
         $this->assertStringContainsString('RouteServiceProvider::class', $this->read('bootstrap/providers.php'));
+        // Sin el proveedor de eventos, una exportación no avisa a quien la pidió.
+        $this->assertFileExists($this->project.'/app/Providers/EventServiceProvider.php');
+        $this->assertStringContainsString('EventServiceProvider::class', $this->read('bootstrap/providers.php'));
         $this->assertFileExists($this->project.'/resources/vue/src/models/user/index.js');
         $this->assertFileDoesNotExist($this->project.'/resources/vue/package.json');
         $this->assertFileExists($this->project.'/.larapack/manifest.json');
