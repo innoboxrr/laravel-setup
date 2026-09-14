@@ -22,6 +22,14 @@ ya no arrancaban y muchas pantallas no funcionaban.
   laravel-auth.
 - **No toca una aplicación que no es nueva** sin `--force`, y no pisa lo que el
   `.env` ya decidió.
+- **Probada en un navegador**, en Vue y en React, sobre una aplicación Laravel 13
+  recién creada: instalar, sitio y su editor, registro, perfil con contraseña y
+  foto, usuarios sólo para administradores y un modelo nuevo generado con
+  LaraPack que aparece en el menú. Lo que encontró se corrigió en laravel-auth
+  6.0.2 y 6.0.3 y en LaraPack 7.10.1 y 7.10.2, que son las versiones mínimas que
+  pide.
+- **Genera y registra el proveedor de eventos**: sin él, exportar desde el
+  administrador no avisaba.
 
 ### Para aplicaciones creadas con la 6.x
 
