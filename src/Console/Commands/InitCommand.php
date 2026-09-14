@@ -4,40 +4,43 @@ namespace Innoboxrr\LaravelSetup\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * `app:setup` y `app:install` de una vez, para quien no necesita revisar lo que
+ * cambió antes de instalar.
+ */
 class InitCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:init {domain}';
+    protected $signature = 'app:init
+        {domain? : Dominio local que configurar en Laragon al terminar}
+        {--react : Monta la interfaz en React; por omisión, Vue}
+        {--force : Configura aunque la aplicación no parezca recién creada}
+        {--without-build : No instala ni compila la interfaz}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Configura la aplicación completa, instala dependencias y configura el dominio';
+    protected $description = 'Configura e instala la aplicación base en un solo paso';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): int
     {
-        $domain = $this->argument('domain');
-        
-        $this->info('Iniciando la configuración completa de la aplicación...');
+        $setup = $this->call('app:setup', array_filter([
+            '--react' => $this->option('react'),
+            '--force' => $this->option('force'),
+        ]));
 
-        // Llamar al comando app:setup
-        $this->call('app:setup');
-        
-        // Llamar al comando app:install
-        $this->call('app:install');
-        
-        // Llamar al comando configure:domain con el dominio proporcionado
-        $this->call('configure:domain', ['domain' => $domain]);
+        if ($setup !== self::SUCCESS) {
+            return $setup;
+        }
 
-        $this->info('¡La configuración completa ha sido exitosa!');
+        $install = $this->call('app:install', array_filter([
+            '--without-build' => $this->option('without-build'),
+        ]));
+
+        if ($install !== self::SUCCESS) {
+            return $install;
+        }
+
+        if ($domain = $this->argument('domain')) {
+            return $this->call('configure:domain', ['domain' => $domain]);
+        }
+
+        return self::SUCCESS;
     }
 }

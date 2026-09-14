@@ -5,108 +5,83 @@ namespace Innoboxrr\LaravelSetup\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
+/**
+ * Instala lo que `app:setup` dejó escrito: dependencias, tablas, el sitio de
+ * ejemplo y la interfaz compilada.
+ *
+ * Cada paso es un proceso aparte: después de `composer update` los proveedores
+ * de los paquetes nuevos sólo existen para un artisan que arranque de nuevo.
+ */
 class AppInstallCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:install';
+    protected $signature = 'app:install
+        {--pretend : Enseña los pasos sin ejecutarlos}
+        {--without-build : No instala ni compila la interfaz}
+        {--composer=composer : El ejecutable de Composer}
+        {--npm=npm : El ejecutable de npm}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Instalar las dependencias y compilar el código en producción';
+    protected $description = 'Instala las dependencias, migra, siembra el sitio y compila la interfaz de la aplicación base';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {   
+    public function handle(): int
+    {
+        $steps = $this->steps();
+
+        if ($this->option('pretend')) {
+            foreach ($steps as [$label, $command]) {
+                $this->line("{$label}: ".implode(' ', $command));
+            }
+
+            return self::SUCCESS;
+        }
+
         set_time_limit(0);
 
-        $this->info('Instalando dependencias...');
+        foreach ($steps as [$label, $command]) {
+            $this->components->info($label);
 
-        // Eliminar lock file
-        if (file_exists(base_path('composer.lock'))) {
-            unlink(base_path('composer.lock'));
-        }
+            $process = new Process($command, base_path(), null, null, null);
 
-        // Ejecutar composer install con todas las dependencias
-        $this->runProcess(['composer', 'install'], 'Instalando dependencias de Composer...');
-        $this->runProcess(['npm', 'install'], 'Instalando dependencias de NPM...');
-        $this->runProcess(['php', 'artisan', 'route:json'], 'Generando JSON de rutas...');
-        $this->runProcess(['npm', 'run', 'build'], 'Compilando los assets...');
-        $this->runProcess(['php', 'artisan', 'migrate', '--force'], 'Migrando la base de datos...');
-        $this->runProcess(['php', 'artisan', 'options:seed'], 'Sembrando opciones...');
-        $this->runProcess(['php', 'artisan', 'vendor:publish', '--provider=Innoboxrr\\LaravelOptions\\Providers\\AppServiceProvider'], 'Publicando archivos del paquete laravel-options...');
-
-        // Copiar archivo builder
-        $this->runProcess(['cp', 'vendor/innoboxrr/larapack-generator/builder.example', 'builder'], 'Copiando archivo builder...');
-
-        $this->replaceProvidersFiles();
-        $this->registerServiceProvider();
-        $this->registerAppConfig();
-
-        $this->info('¡La instalación se ha completado con éxito!'); 
-    }
-
-    private function runProcess(array $command, string $message)
-    {
-        $this->info($message);
-    
-        $process = new Process($command);
-    
-        // Solo habilita TTY si no es Windows
-        if (DIRECTORY_SEPARATOR !== '\\') {
-            $process->setTty(true); // Permite mostrar la salida en tiempo real en sistemas basados en Unix
-        }
-    
-        $process->setTimeout(null); // Sin límite de tiempo
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                $this->warn(trim($buffer)); // Muestra los errores como advertencias (menos dramático que rojo)
-            } else {
-                $this->line(trim($buffer)); // Muestra la salida normal
+            if (DIRECTORY_SEPARATOR !== '\\' && Process::isTtySupported()) {
+                $process->setTty(true);
             }
-        });
-    
-        if (!$process->isSuccessful()) {
-            // Usar warn o line en lugar de error para que no se vea rojo
-            $this->warn(trim($process->getErrorOutput()));
-            throw new \RuntimeException($process->getErrorOutput());
+
+            $process->run(fn (string $type, string $buffer) => $this->output->write($buffer));
+
+            if (! $process->isSuccessful()) {
+                $this->components->error("Falló «{$label}»: ".implode(' ', $command));
+
+                return self::FAILURE;
+            }
         }
+
+        $this->newLine();
+        $this->components->info('La aplicación está lista. Regístrate con un correo de ADMIN_EMAILS para entrar al administrador.');
+
+        return self::SUCCESS;
     }
 
-    private function replaceProvidersFiles()
+    /**
+     * @return array<int, array{0: string, 1: array<int, string>}>
+     */
+    private function steps(): array
     {
-        $appServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AppServiceProvider.php.stub');
-        $authServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/AuthServiceProvider.php.stub');
-        $eventServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/EventServiceProvider.php.stub');
-        $routeServiceProvider = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Providers/RouteServiceProvider.php.stub');
+        $artisan = fn (string ...$arguments): array => [PHP_BINARY, 'artisan', ...$arguments];
 
-        file_put_contents(base_path('app/Providers/AppServiceProvider.php'), $appServiceProvider);
-        file_put_contents(base_path('app/Providers/AuthServiceProvider.php'), $authServiceProvider);
-        file_put_contents(base_path('app/Providers/EventServiceProvider.php'), $eventServiceProvider);
-        file_put_contents(base_path('app/Providers/RouteServiceProvider.php'), $routeServiceProvider);
-    }
+        $steps = [
+            ['Dependencias de Composer', [$this->option('composer'), 'update', '--no-interaction']],
+            ['Tabla de tokens de Sanctum', $artisan('vendor:publish', '--tag=sanctum-migrations')],
+            ['Tabla de notificaciones', $artisan('notifications:install')],
+            ['Base de datos', $artisan('migrate', '--force')],
+            ['Sitio de ejemplo', $artisan('db:seed', '--class=Database\\Seeders\\SiteOptionsSeeder', '--force')],
+            ['Enlace público del almacenamiento', $artisan('storage:link')],
+            ['Rutas para la interfaz', $artisan('route:json')],
+        ];
 
-    private function registerAppConfig()
-    {
-        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub'
-        $appFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/app.php.stub');
-        // Poner el contenido en el archivo bootstrap/app.php
-        file_put_contents(base_path('bootstrap/app.php'), $appFile);
-    }
+        if (! $this->option('without-build')) {
+            $steps[] = ['Dependencias de npm', [$this->option('npm'), 'install']];
+            $steps[] = ['Compilación de la interfaz', [$this->option('npm'), 'run', 'build']];
+        }
 
-    private function registerServiceProvider()
-    {
-        // Buscar el stub en  __DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub'
-        $providersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/bootstrap/providers.php.stub');
-        // Poner el contenido en el archivo bootstrap/providers.php
-        file_put_contents(base_path('bootstrap/providers.php'), $providersFile);
+        return $steps;
     }
 }
