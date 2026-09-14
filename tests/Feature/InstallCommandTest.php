@@ -44,7 +44,7 @@ final class InstallCommandTest extends TestCase
 
         $lines = $this->lines();
 
-        $this->assertContains('Dependencias de Composer: /opt/composer.phar update --no-interaction', $lines);
+        $this->assertContains('Dependencias de Composer: '.PHP_BINARY.' /opt/composer.phar update --no-interaction', $lines);
         $this->assertContains('Compilación de la interfaz: pnpm run build', $lines);
     }
 

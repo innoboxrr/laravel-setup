@@ -67,8 +67,14 @@ class AppInstallCommand extends Command
     {
         $artisan = fn (string ...$arguments): array => [PHP_BINARY, 'artisan', ...$arguments];
 
+        // Composer suele venir como composer.phar, que no es ejecutable por sí
+        // mismo en Windows: se lanza con el mismo PHP que corre artisan.
+        $composer = str_ends_with((string) $this->option('composer'), '.phar')
+            ? [PHP_BINARY, $this->option('composer')]
+            : [$this->option('composer')];
+
         $steps = [
-            ['Dependencias de Composer', [$this->option('composer'), 'update', '--no-interaction']],
+            ['Dependencias de Composer', [...$composer, 'update', '--no-interaction']],
             ['Tabla de tokens de Sanctum', $artisan('vendor:publish', '--tag=sanctum-migrations')],
             ['Tabla de notificaciones', $artisan('notifications:install')],
             ['Base de datos', $artisan('migrate', '--force')],
