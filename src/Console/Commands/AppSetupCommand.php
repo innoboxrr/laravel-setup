@@ -3,308 +3,223 @@
 namespace Innoboxrr\LaravelSetup\Console\Commands;
 
 use Illuminate\Console\Command;
-use Innoboxrr\LaravelSetup\Utils\FileManager;
-use Innoboxrr\LaravelSetup\Utils\ComposerJsonEditor;
-use Innoboxrr\LaravelSetup\Utils\EnvEditor;
-use Illuminate\Support\Str;
+use Illuminate\Filesystem\Filesystem;
+use Innoboxrr\LaravelSetup\Support\ComposerJson;
+use Innoboxrr\LaravelSetup\Support\Dependencies;
+use Innoboxrr\LaravelSetup\Support\EnvFile;
+use RuntimeException;
+use Symfony\Component\Console\Output\BufferedOutput;
 
+/**
+ * Convierte una aplicación Laravel 13 recién creada en la aplicación base.
+ *
+ * No instala nada: deja escritos composer.json, package.json, la configuración,
+ * las pantallas y el usuario generado con LaraPack, y `app:install` instala,
+ * migra y compila. Así se puede revisar lo que cambió antes de instalar.
+ */
 class AppSetupCommand extends Command
 {
-    use FileManager;
+    protected $signature = 'app:setup
+        {--react : Monta la interfaz en React; por omisión, Vue}
+        {--force : Configura aunque la aplicación no parezca recién creada}';
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:setup';
+    protected $description = 'Convierte una aplicación Laravel 13 recién creada en la aplicación base: acceso, sitio, administrador y usuarios';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Configurar la instalación de la aplicación';
+    private Filesystem $files;
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(Filesystem $files): int
     {
-        if (!$this->testNode()) return;
-        $this->replacePackageJson();
-        $this->replaceViteConfig();
-        $this->addTailwindCssConfig();
-        $this->addPostCssConfig();
-        $this->addCommands();
-        $this->addPhpDoc();
-        $this->addAppHelpers();
-        $this->addHttp();
-        $this->addMigrations();
-        $this->updateComposerJson();
-        $this->updateEnvFiles();
-        $this->addVue();
-        $this->deleteWelcomeBladeFile();
-        $this->createAppBladeFile();
-        $this->replaceWebRoutesFile();
-        $this->info('¡La configuración se ha completado con éxito!');
-    }
+        $this->files = $files;
 
-    // NODE //
-    private function testNode()
-    {
+        $framework = $this->option('react') ? 'react' : 'vue';
 
-        $node = shell_exec('node -v'); // v18.12.1 -> 18.12
+        if (! $this->option('force') && ! $this->isFresh()) {
+            $this->components->error('La aplicación ya no parece recién creada: app:setup reemplaza archivos como bootstrap/app.php, routes/web.php y package.json. Usa --force si de verdad quieres configurarla.');
 
-        if (is_null($node)) {
-
-            $this->info('NodeJS no está instalado en el sistema');
-
-            return 0; // Considerar lanzar una excepción.
-
+            return self::FAILURE;
         }
 
-        $node =  str_replace('v', '', $node);
+        $this->components->info("Configurando la aplicación base con {$framework}.");
 
-        $node = explode('.', $node);
+        $this->components->task('Dependencias de Composer', fn () => $this->requireDependencies());
+        $this->components->task('Variables de entorno', fn () => $this->configureEnvironment());
+        $this->components->task('Administradores en config/auth.php', fn () => $this->configureAdmins());
+        $this->components->task('Backend de la aplicación', fn () => $this->publishBackend());
+        $this->components->task('Interfaz en '.$framework, fn () => $this->publishFrontend($framework));
+        $this->components->task('Rutas para el front', fn () => $this->configureRoutesToJson($framework));
+        $this->components->task('Usuarios, con LaraPack', fn () => $this->generateUsers($framework));
 
-        $node = (float) ($node[0] . '.' . $node[1]);
+        $this->newLine();
+        $this->components->info('Listo. Revisa los cambios y ejecuta: php artisan app:install');
+        $this->line('  Pon tu correo en ADMIN_EMAILS, en el .env, para entrar al administrador.');
 
-        if ($node < 16) {
+        return self::SUCCESS;
+    }
 
-            $this->info('La versión de node no es compatible');
+    /**
+     * Una aplicación recién creada todavía tiene la bienvenida de Laravel y no
+     * tiene la interfaz ni el laraimport de la aplicación base.
+     */
+    private function isFresh(): bool
+    {
+        return is_file(resource_path('views/welcome.blade.php'))
+            && ! is_file(base_path('laraimport.json'))
+            && ! is_dir(resource_path('vue/app'))
+            && ! is_dir(resource_path('react/app'));
+    }
 
-            return 0;
+    private function requireDependencies(): void
+    {
+        (new ComposerJson(base_path('composer.json')))
+            ->remove(Dependencies::composerRemoved())
+            ->require(Dependencies::composer())
+            ->require(Dependencies::composerDev(), dev: true)
+            ->save();
+    }
+
+    /**
+     * Las claves que la aplicación base necesita. En .env.example van sin
+     * secretos; en .env no se pisa lo que ya estuviera escrito, salvo lo que la
+     * aplicación base cambia a propósito.
+     */
+    private function configureEnvironment(): void
+    {
+        $defaults = [
+            'ADMIN_EMAILS' => '',
+            'LARAVEL_UPLOADS_DISK' => 'public',
+            'LARAVEL_OPTIONS_EXPORT_DISK' => 'local',
+            'LARAVEL_AUDIT_EXPORT_DISK' => 'local',
+            'VITE_APP_NAME' => '${APP_NAME}',
+            'VITE_GOOGLE_LOGIN' => 'false',
+            'VITE_FACEBOOK_LOGIN' => 'false',
+            'VITE_MICROSOFT_LOGIN' => 'false',
+        ];
+
+        $decided = [
+            'APP_LOCALE' => 'es',
+            'APP_FALLBACK_LOCALE' => 'en',
+            'APP_FAKER_LOCALE' => 'es_MX',
+            'SESSION_DRIVER' => 'database',
+        ];
+
+        foreach ([base_path('.env.example'), base_path('.env')] as $path) {
+            if (! is_file($path)) {
+                continue;
+            }
+
+            (new EnvFile($path))->setMany($decided)->setMany($defaults, onlyMissing: true)->save();
+        }
+    }
+
+    /**
+     * `auth.admins` es lo que lee isAdmin() en el usuario generado.
+     */
+    private function configureAdmins(): void
+    {
+        $path = config_path('auth.php');
+        $config = (string) file_get_contents($path);
+
+        if (str_contains($config, "'admins'")) {
+            return;
         }
 
-        return 1;
+        $entry = <<<'PHP'
+
+    /*
+    |--------------------------------------------------------------------------
+    | Administradores
+    |--------------------------------------------------------------------------
+    |
+    | Los correos de quienes administran la aplicación, separados por comas en
+    | ADMIN_EMAILS. Es lo que responde isAdmin() en el usuario: las políticas
+    | les dejan pasar y pueden entrar como otros usuarios.
+    |
+    */
+
+    'admins' => array_values(array_filter(array_map('trim', explode(',', (string) env('ADMIN_EMAILS', ''))))),
+
+];
+PHP;
+
+        $position = strrpos($config, '];');
+
+        file_put_contents($path, substr($config, 0, $position).ltrim($entry, "\n").substr($config, $position + 2));
     }
 
-    // CONFIG //
-    private function replacePackageJson()
+    private function publishBackend(): void
     {
-        $packageJson = file_get_contents(__DIR__ . '/../../../stubs/laravel/package.json.stub');
-        file_put_contents(base_path('package.json'), $packageJson);
+        $this->files->copyDirectory($this->stubs('common'), base_path());
+
+        $this->files->delete(resource_path('views/welcome.blade.php'));
+        $this->files->deleteDirectory(resource_path('js'));
+        $this->files->deleteDirectory(resource_path('css'));
     }
 
-    private function replaceViteConfig()
+    private function publishFrontend(string $framework): void
     {
-        $viteConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/vite.config.js.stub');
-        file_put_contents(base_path('vite.config.js'), $viteConfig);
+        $this->files->copyDirectory($this->stubs($framework), base_path());
     }
 
-    // TAILWIND
-    private function addTailwindCssConfig()
+    private function configureRoutesToJson(string $framework): void
     {
-        $tailwindCssConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/tailwind.config.js.stub');
-        file_put_contents(base_path('tailwind.config.js'), $tailwindCssConfig);
+        $this->files->ensureDirectoryExists(config_path());
+
+        file_put_contents(config_path('routes-to-json.php'), <<<PHP
+<?php
+
+return [
+
+    // Las rutas con nombre que lee el front con route(): las del administrador,
+    // las del paquete de autenticación y las de la API generada por LaraPack.
+    'path' => env('JSON_ROUTES_FILE', resource_path('{$framework}/routes.json')),
+
+];
+
+PHP);
     }
 
-    private function addPostCssConfig()
+    /**
+     * El usuario de Laravel se sustituye por el que genera LaraPack desde
+     * laraimport.json: la misma arquitectura que cualquier otro modelo, con su
+     * API, sus políticas, sus tests y su módulo en el administrador.
+     */
+    private function generateUsers(string $framework): void
     {
-        $postCssConfig = file_get_contents(__DIR__ . '/../../../stubs/laravel/postcss.config.js.stub');
-        file_put_contents(base_path('postcss.config.js'), $postCssConfig);
+        $this->files->delete(app_path('Models/User.php'));
+
+        $this->larapack('larapack:import', [
+            'jsonPath' => base_path('laraimport.json'),
+            "--{$framework}" => true,
+            '--root' => base_path(),
+        ]);
+
+        $this->larapack('larapack:route-service-provider', [
+            '--root' => base_path(),
+        ]);
+
+        // La política generada nace cerrada; el perfil necesita que cada quien
+        // vea y edite su propia cuenta. Las políticas son código de la
+        // aplicación, así que LaraPack no la vuelve a pisar al regenerar.
+        $this->files->copyDirectory($this->stubs('overrides'), base_path());
     }
 
-    // COMMANDS //
-    private function addCommands()
+    /**
+     * Sin su salida, un laraimport que LaraPack rechaza dejaba la aplicación sin
+     * usuario y el comando decía que todo había ido bien.
+     *
+     * @param  array<string, mixed>  $arguments
+     */
+    private function larapack(string $command, array $arguments): void
     {
-        $this->mkDir(base_path('app/Console/Commands'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Console/Commands', base_path('app/Console/Commands'));
+        $output = new BufferedOutput;
+
+        if ($this->runCommand($command, $arguments, $output) !== self::SUCCESS) {
+            throw new RuntimeException("{$command} terminó con error:\n".$output->fetch());
+        }
     }
 
-    // PHPDOC //
-    private function addPhpDoc()
+    private function stubs(string $path): string
     {
-        $phpDocFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/phpDoc.phar');
-        file_put_contents(base_path('phpDoc.phar'), $phpDocFile);
-    }
-
-    // HELPERS //
-    private function addAppHelpers()
-    {
-        $this->mkDir(base_path('app/Helpers'));
-        $helpersFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/app/Helpers/app.php.stub');
-        file_put_contents(base_path('app/Helpers/app.php'), $helpersFile);
-    }
-
-    // HTTP //
-    private function addHttp()
-    {
-        $this->mkDir(base_path('app/Http'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/app/Http', base_path('app/Http'));
-    }
-
-    // MIGRATIONS //
-    private function addMigrations()
-    {
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/database/migrations', base_path('database/migrations'));
-    }
-
-    // COMPOSER PACKAGES INSTALATION //
-
-    private function updateComposerJson()
-    {
-        $editor = new ComposerJsonEditor(base_path('composer.json'));
-        $editor->addParameter('require.algolia/scout-extended', '^3.1');
-        $editor->addParameter('require.google/recaptcha', '^1.3');
-        $editor->addParameter('require.innoboxrr/aws-file-manager', '^0.0');
-        $editor->addParameter('require.innoboxrr/laravel-audit', '^1.0');
-        $editor->addParameter('require.innoboxrr/laravel-auth', '^4.0');
-        $editor->addParameter('require.innoboxrr/laravel-env-editor', 'dev-master');
-        $editor->addParameter('require.innoboxrr/laravel-notifications', '^1.0');
-        $editor->addParameter('require.innoboxrr/laravel-uploads', '^1.0');
-        $editor->addParameter('require.innoboxrr/locale-generator', '^1.0');
-        $editor->addParameter('require.innoboxrr/routes-to-json', '^1.0');
-        $editor->addParameter('require.innoboxrr/search-surge', '^2.0');
-        $editor->addParameter('require.innoboxrr/traits', '^1.0');
-        $editor->addParameter('require.innoboxrr/laravel-options', '^1.0');
-        $editor->addParameter('require.maatwebsite/excel', '^3.1'); // Excel
-        $editor->addParameter('require.opcodesio/log-viewer', '^3.0'); // Excel
-        $editor->addParameter('require.league/flysystem-aws-s3-v3', '^3.0'); // AWS S3
-        $editor->addParameter('require.staudenmeir/belongs-to-through', '^2.1'); // **
-        $editor->addParameter('require.staudenmeir/eloquent-has-many-deep', '^1.0'); // **
-        $editor->addParameter('require-dev.innoboxrr/larapack-generator', '^5.0');
-        $editor->addParameter('require-dev.lab404/laravel-impersonate', '^1.7');
-        $editor->addParameter('autoload.files', ['app/Helpers/app.php']);
-    }
-
-    // Env
-    private function updateEnvFiles()
-    {
-        $editor = new EnvEditor(base_path('.env'), base_path('.env.example'));
-
-        // Base parameters
-        $appKey = $editor->getParameter('APP_KEY');
-        $databaseName = $editor->getParameter('DB_DATABASE');
-
-        // Configuración general - Respetar APP_KEY
-        $editor->addOrUpdateParameter('APP_NAME', 'Laravel');
-        $editor->addOrUpdateParameter('APP_ENV', 'local');
-        $editor->addOrUpdateParameter('APP_KEY', $appKey);
-        $editor->addOrUpdateParameter('APP_DEBUG', 'true');
-        $editor->addOrUpdateParameter('APP_TIMEZONE', 'UTC');
-        $editor->addOrUpdateParameter('APP_URL', 'http://localhost');
-
-        // Variables de localización y configuración general
-        $editor->addOrUpdateParameter('APP_LOCALE', 'en');
-        $editor->addOrUpdateParameter('APP_FALLBACK_LOCALE', 'en');
-        $editor->addOrUpdateParameter('APP_FAKER_LOCALE', 'en_US');
-
-        // Configuración de Mantenimiento y otros
-        $editor->addOrUpdateParameter('APP_MAINTENANCE_DRIVER', 'file');
-        $editor->addOrUpdateParameter('# APP_MAINTENANCE_STORE', 'database');
-        $editor->addOrUpdateParameter('BCRYPT_ROUNDS', '12');
-
-        // Cli server
-        $editor->addOrUpdateParameter('PHP_CLI_SERVER_WORKERS', '4');
-        
-        // Configuración de Logs
-        $editor->addOrUpdateParameter('LOG_CHANNEL', 'stack');
-        $editor->addOrUpdateParameter('LOG_STACK', 'single');
-        $editor->addOrUpdateParameter('LOG_DEPRECATIONS_CHANNEL', 'null');
-        $editor->addOrUpdateParameter('LOG_LEVEL', 'debug');
-
-        // Base de datos - Mantener configuraciones actuales
-        $editor->addOrUpdateParameter('DB_CONNECTION', 'mysql');
-        $editor->addOrUpdateParameter('DB_HOST', '127.0.0.1');
-        $editor->addOrUpdateParameter('DB_PORT', '3306');
-        $editor->addOrUpdateParameter('DB_DATABASE', $databaseName);
-        $editor->addOrUpdateParameter('DB_USERNAME', 'root');
-        $editor->addOrUpdateParameter('DB_PASSWORD', '');
-
-        // Sesión
-        $editor->addOrUpdateParameter('SESSION_DRIVER', 'database');
-        $editor->addOrUpdateParameter('SESSION_LIFETIME', '2400');
-        $editor->addOrUpdateParameter('SESSION_ENCRYPT', 'false');
-        $editor->addOrUpdateParameter('SESSION_PATH', '/');
-        $editor->addOrUpdateParameter('SESSION_DOMAIN', 'null');
-
-        // Configuraciones varias
-        $editor->addOrUpdateParameter('BROADCAST_CONNECTION', 'log');
-        $editor->addOrUpdateParameter('FILESYSTEM_DISK', 'local');
-        $editor->addOrUpdateParameter('QUEUE_CONNECTION', 'database');
-        $editor->addOrUpdateParameter('CACHE_STORE', 'database');
-        $editor->addOrUpdateParameter('CACHE_PREFIX', '');
-        $editor->addOrUpdateParameter('MEMCACHED_HOST', '127.0.0.1');
-        $editor->addOrUpdateParameter('REDIS_CLIENT', 'phpredis');
-        $editor->addOrUpdateParameter('REDIS_HOST', '127.0.0.1');
-        $editor->addOrUpdateParameter('REDIS_PASSWORD', 'null');
-        $editor->addOrUpdateParameter('REDIS_PORT', '6379');
-
-        // Configuración de Mail
-        $editor->addOrUpdateParameter('MAIL_MAILER', 'log');
-        $editor->addOrUpdateParameter('MAIL_HOST', '127.0.0.1');
-        $editor->addOrUpdateParameter('MAIL_PORT', '2525');
-        $editor->addOrUpdateParameter('MAIL_USERNAME', 'null');
-        $editor->addOrUpdateParameter('MAIL_PASSWORD', 'null');
-        $editor->addOrUpdateParameter('MAIL_ENCRYPTION', 'null');
-        $editor->addOrUpdateParameter('MAIL_FROM_ADDRESS', '"hello@example.com"');
-        $editor->addOrUpdateParameter('MAIL_FROM_NAME', '${APP_NAME}');
-
-        // Configuración de AWS
-        $editor->addOrUpdateParameter('AWS_ACCESS_KEY_ID', '');
-        $editor->addOrUpdateParameter('AWS_SECRET_ACCESS_KEY', '');
-        $editor->addOrUpdateParameter('AWS_DEFAULT_REGION', 'us-east-1');
-        $editor->addOrUpdateParameter('AWS_BUCKET', '');
-        $editor->addOrUpdateParameter('AWS_USE_PATH_STYLE_ENDPOINT', 'false');
-
-        // Configuración de Vite - Respetar sintaxis ${BASE_PROP}
-        $editor->addOrUpdateParameter('VITE_APP_NAME', '${APP_NAME}');
-        $editor->addOrUpdateParameter('VITE_APP_LANG', 'en');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_57X57', 'https://picsum.photos/57/57');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_60X60', 'https://picsum.photos/60/60');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_72X72', 'https://picsum.photos/72/72');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_76X76', 'https://picsum.photos/76/76');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_114X114', 'https://picsum.photos/114/114');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_120X120', 'https://picsum.photos/120/120');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_144X144', 'https://picsum.photos/144/144');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_152X152', 'https://picsum.photos/152/152');
-        $editor->addOrUpdateParameter('VITE_APPLE_TOUCH_ICON_180X180', 'https://picsum.photos/180/180');
-        $editor->addOrUpdateParameter('VITE_ICON_192X192', 'https://picsum.photos/192/192');
-        $editor->addOrUpdateParameter('VITE_ICON_32X32', 'https://picsum.photos/32/32');
-        $editor->addOrUpdateParameter('VITE_ICON_96X96', 'https://picsum.photos/96/96');
-        $editor->addOrUpdateParameter('VITE_ICON_16X16', 'https://picsum.photos/16/16');
-        $editor->addOrUpdateParameter('VITE_ICON', '${VITE_ICON_192X192}');
-        $editor->addOrUpdateParameter('VITE_MICROSOFT_LOGIN', 'true');
-        $editor->addOrUpdateParameter('VITE_GOOGLE_LOGIN', 'true');
-        $editor->addOrUpdateParameter('VITE_FACEBOOK_LOGIN', 'true');
-
-        $editor->addOrUpdateParameter('VITE_SSL_KEY', 'C:/laragon/etc/ssl/laragon.key');
-        $editor->addOrUpdateParameter('VITE_SSL_CERT', 'C:/laragon/etc/ssl/laragon.crt');
-        $editor->addOrUpdateParameter('VITE_DEV_SERVER_HOST', 'localhost');
-        $editor->addOrUpdateParameter('VITE_DEV_SERVER_PORT', '5173');
-        $editor->addOrUpdateParameter('VITE_DEV_SERVER_CORS_ORIGIN', '*');
-    }
-
-    // CSS //
-    private function addVue()
-    {
-        // De la App original elimianr las carpetas css y js
-        $this->rrDir(resource_path('css'));
-        $this->rrDir(resource_path('js'));
-        $this->cpDir(__DIR__ . '/../../../stubs/laravel/resources/vue', dst: resource_path('vue'));
-    }
-
-    // VIEWS //
-
-    private function deleteWelcomeBladeFile()
-    {
-        $this->rrDir(resource_path('views/welcome.blade.php'));
-    }
-
-    private function createAppBladeFile()
-    {
-        // Arroja error
-        $path = $this->mkDir(resource_path('views'));
-        $bladeFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/resources/views/app.blade.php.stub');
-        file_put_contents(resource_path('views/app.blade.php'), $bladeFile);
-    }
-
-    // ROUTES //
-    private function replaceWebRoutesFile()
-    {
-        $webRoutesFile = file_get_contents(__DIR__ . '/../../../stubs/laravel/routes/web.php.stub');
-        file_put_contents(base_path('routes/web.php'), $webRoutesFile);
+        return dirname(__DIR__, 3).'/stubs/app/'.$path;
     }
 }

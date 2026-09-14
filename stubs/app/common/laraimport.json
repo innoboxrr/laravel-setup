@@ -1,0 +1,55 @@
+{
+    "$schema": "vendor/innoboxrr/larapack-generator/schema/laraimport.schema.json",
+    "models": [
+        {
+            "name": "User",
+            "authenticatable": true,
+            "metas": true,
+            "editable_metas": ["avatar"],
+            "routes": { "except": ["create"] },
+            "props": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "datatable": true,
+                    "form": true,
+                    "form_component": "TextInputComponent",
+                    "form_submit": true
+                },
+                {
+                    "name": "email",
+                    "type": "string",
+                    "datatable": true,
+                    "form": true,
+                    "form_component": "TextInputComponent",
+                    "form_submit": true
+                },
+                {
+                    "name": "email_verified_at",
+                    "type": "timestamp",
+                    "nullable": true,
+                    "fillable": false,
+                    "creatable": false,
+                    "updatable": false,
+                    "datatable": true
+                },
+                {
+                    "name": "password",
+                    "type": "string",
+                    "updatable": false,
+                    "exports_cols": false
+                }
+            ],
+            "requests": [
+                {
+                    "name": "Update",
+                    "rules": {
+                        "user_id": "required|numeric",
+                        "name": "sometimes|required|string|max:255",
+                        "email": "sometimes|required|email|max:255"
+                    }
+                }
+            ]
+        }
+    ]
+}
