@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.0.1
+
+- **Volver de una suplantación es un POST.** laravel-auth 6.1.0 dejó de aceptar
+  GET en `auth.revert.impersonate`: por GET, otro sitio terminaba la suplantación
+  de un administrador con un `<img>`, sin token CSRF. Las interfaces de Vue y
+  React llaman ahora con POST, y la aplicación pide `innoboxrr/laravel-auth
+  ^6.1.0`, porque con la 6.0 ese POST respondería 405.
+
 ## 7.0.0
 
 Reescrito para Laravel 13. La versión anterior montaba una interfaz de Laravel
