@@ -1,0 +1,27 @@
+{
+    "private": true,
+    "type": "module",
+    "description": "Pruebas de la interfaz Vue de la aplicación base (stubs/app/vue).",
+    "scripts": {
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "dependencies": {
+        "axios": "^1.7.0",
+        "innoboxrr-form-core": "^2.8.0",
+        "innoboxrr-form-elements": "^6.7.0",
+        "innoboxrr-http-request": "^2.0.0",
+        "innoboxrr-i18n": "^1.2.0",
+        "innoboxrr-js-validator": "^2.0.0",
+        "innoboxrr-route-resolver": "^2.0.0",
+        "pinia": "^3.0.0",
+        "vue": "^3.5.0",
+        "vue-router": "^4.5.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^6.0.0",
+        "@vue/test-utils": "^2.4.6",
+        "jsdom": "^25.0.0",
+        "vitest": "^3.2.0"
+    }
+}
