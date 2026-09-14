@@ -86,7 +86,9 @@ Un modelo que se genere después aparece solo en el menú al compilar.
 
 **auth**
 - `load()`: GET `route('auth.get.auth')` → `{user, authenticated, is_admin,
-  verified, impersonating}`.
+  verified, impersonating}`. `verified` es `true` para un usuario que no
+  implementa `MustVerifyEmail` (laravel-auth 6.0.2): el aviso de verificación
+  sólo sale cuando de verdad hay un correo que verificar.
 - `login({email, password, remember})`: primero GET `/sanctum/csrf-cookie`
   (`route('sanctum.csrf-cookie')` si está en routes.json), luego el POST de
   `auth.login`, luego `load()`.

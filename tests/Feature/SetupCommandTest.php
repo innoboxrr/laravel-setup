@@ -46,7 +46,7 @@ final class SetupCommandTest extends TestCase
 
         $composer = json_decode($this->read('composer.json'), true);
 
-        $this->assertSame('^6.0', $composer['require']['innoboxrr/laravel-auth']);
+        $this->assertSame('^6.0.2', $composer['require']['innoboxrr/laravel-auth']);
         $this->assertSame('^2.1', $composer['require']['innoboxrr/laravel-options']);
         $this->assertArrayHasKey('innoboxrr/larapack-generator', $composer['require-dev']);
 

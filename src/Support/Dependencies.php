@@ -22,7 +22,7 @@ final class Dependencies
             'google/recaptcha' => '^1.3',
             'innoboxrr/aws-file-manager' => '^2.0',
             'innoboxrr/laravel-audit' => '^2.1',
-            'innoboxrr/laravel-auth' => '^6.0',
+            'innoboxrr/laravel-auth' => '^6.0.2',
             'innoboxrr/laravel-env-editor' => '^2.1',
             'innoboxrr/laravel-notifications' => '^2.1',
             'innoboxrr/laravel-options' => '^2.1',
