@@ -18,8 +18,11 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.3",
-        "innoboxrr/larapack-generator": "^7.10.2",
+        "innoboxrr/larapack-generator": "^7.10",
         "laravel/framework": "^13.0"
+    },
+    "conflict": {
+        "innoboxrr/larapack-generator": "<7.10.2"
     },
     "extra": {
         "laravel": {
