@@ -47,7 +47,7 @@ final class Dependencies
     public static function composerDev(): array
     {
         return [
-            'innoboxrr/larapack-generator' => '^7.10',
+            'innoboxrr/larapack-generator' => '^7.10.2',
         ];
     }
 
