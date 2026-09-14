@@ -1,83 +1,94 @@
-# LaravelSetUp: ¡Pon tu aplicación Laravel en marcha en minutos!
+# laravel-setup
 
-¿Estás cansado de configurar manualmente una aplicación Laravel cada vez que inicias un nuevo proyecto? ¡Te presentamos **LaravelSetUp** de **InnoboxRR**! Esta poderosa herramienta te permite arrancar tu desarrollo en **Laravel** en cuestión de **minutos**, automatizando todas las configuraciones tediosas y necesarias para que puedas concentrarte en lo que realmente importa: **crear algo increíble**.
+Convierte una aplicación Laravel 13 recién creada en la aplicación base del
+ecosistema innoboxrr, en Vue o en React:
 
-Con solo un par de comandos, tendrás un proyecto Laravel completamente listo, equipado con configuraciones optimizadas, archivos esenciales y paquetes clave para acelerar tu flujo de trabajo.
+- **Sitio público** editable desde el administrador: inicio, únete, contacto,
+  aviso de privacidad y términos, con un sitio de ejemplo completo.
+- **Acceso** con [laravel-auth](https://github.com/innoboxrr/laravel-auth):
+  iniciar sesión, registro, recuperar la contraseña, verificación de correo y
+  suplantación para administradores.
+- **Administrador** con menú que se construye solo, notificaciones, perfil con
+  avatar y contraseña, editor del sitio y enlaces a los registros
+  ([log-viewer](https://github.com/opcodesio/log-viewer)) y al editor del `.env`.
+- **Usuarios generados con [LaraPack](https://github.com/innoboxrr/larapack-generator)**,
+  con la misma arquitectura que cualquier otro modelo: API, políticas, tests y su
+  módulo en el administrador. Lo que generes después aparece en el menú.
 
-## ¿Qué hace LaravelSetUp por ti?
+## Requisitos
 
-**LaravelSetUp** realiza un conjunto completo de configuraciones en tu aplicación Laravel que, de otro modo, tomarían tiempo y esfuerzo. Este paquete te facilita la vida realizando tareas como:
+- PHP 8.3 o superior y Composer.
+- Node 20 o superior y npm 10.
+- Una aplicación **recién creada** con `laravel new` o
+  `composer create-project laravel/laravel`, con su base de datos configurada.
 
-- **Verificación de NodeJS**: Asegúrate de que tienes la versión adecuada de NodeJS instalada para que tu aplicación Laravel funcione perfectamente.
-- **Optimización de `package.json` y `vite.config.js`**: Reemplaza estos archivos con versiones predefinidas y optimizadas para el desarrollo moderno.
-- **Soporte para helpers**: Agrega el archivo `app/Helpers/app.php` a la sección de autoload en `composer.json`, asegurando que tus helpers personalizados siempre estén disponibles.
-- **Controladores precargados**: Añade el archivo `app/Http/Controllers/AppController.php` para que puedas empezar con controladores listos para usar.
-- **Instalación de paquetes clave**: Integra automáticamente los paquetes `innoboxrr/routes-to-json` y `innoboxrr/laravel-auth` para mejorar la gestión de rutas y autenticación en tu aplicación.
-- **Estilos y scripts preconfigurados**: Agrega archivos CSS y JS predefinidos para que tengas un punto de partida con los mejores estilos y scripts para tu aplicación.
-- **Archivos JSON de navegación**: Carga automáticamente un archivo `resources/json/nav.json` para configurar la navegación de tu aplicación.
-- **Elimina el archivo innecesario** `welcome.blade.php` y lo reemplaza con un archivo base `app.blade.php` listo para el desarrollo.
-- **Copia la estructura Vue.js**: Integra automáticamente el directorio `resources/vue` para que tengas tu frontend preparado para empezar a construir interfaces dinámicas.
-- **Actualización de rutas**: Reemplaza el archivo `routes/web.php` con una versión mejorada y optimizada para tu flujo de trabajo.
-
-## ¿Cómo usar LaravelSetUp?
-
-Configurar tu aplicación Laravel nunca fue tan fácil. Solo necesitas ejecutar los siguientes comandos en tu terminal:
-
-## Opción A.
-
-### Paso 1: Configurar la aplicación
+## Uso
 
 ```bash
-php artisan app:setup
-```
-Este comando configurará todos los aspectos clave de tu aplicación Laravel para que esté lista en minutos.
+composer require --dev innoboxrr/laravel-setup
 
-### Paso 2: Instalar los paquetes
+php artisan app:setup            # Vue
+php artisan app:setup --react    # React
+```
+
+`app:setup` no instala nada: escribe `composer.json`, `package.json`, la
+configuración, las pantallas y el usuario generado. Revisa los cambios con
+`git diff`, pon tu correo en `ADMIN_EMAILS` del `.env` y después:
+
 ```bash
 php artisan app:install
+composer run dev
 ```
-Instala automáticamente todos los paquetes y configuraciones necesarias para tu aplicación.
 
-### Paso 3: Configuración del dominio
+`app:install` actualiza las dependencias, crea las tablas, siembra el sitio de
+ejemplo, enlaza el almacenamiento público, exporta las rutas para la interfaz y
+la compila. Con `--pretend` enseña los pasos sin ejecutarlos, y con
+`--without-build` no toca npm.
+
+Regístrate con el correo de `ADMIN_EMAILS` y entra en `/admin`.
+
+**`APP_URL` tiene que ser la dirección con la que abres la aplicación**, con su
+puerto. El administrador llama a la API con la cookie de sesión, y Sanctum sólo
+la acepta desde los dominios de `SANCTUM_STATEFUL_DOMAINS`: por omisión
+`localhost`, `127.0.0.1:8000` y el de `APP_URL`. Con otra dirección, la sesión
+se abre pero cada tabla del administrador responde 401 y te devuelve al login.
+
+Para hacerlo todo de una vez: `php artisan app:init` (acepta `--react`).
+
+## Qué queda en la aplicación
+
+| Dónde | Qué | De quién |
+|---|---|---|
+| `resources/<ui>/app/` | Sitio, acceso, administrador, estados y rutas | Tuyo desde que se instala |
+| `resources/<ui>/index.js`, `resources/<ui>/src/` | Los módulos generados | De LaraPack: se regeneran |
+| `laraimport.json` | La declaración del usuario y de lo que añadas | Tuyo |
+| `database/seeders/SiteOptionsSeeder.php` | El sitio de ejemplo | Tuyo |
+| `app/Http/Middleware/EnsureUserIsAdmin.php` | El middleware `admin` | Tuyo |
+| `config/auth.php` → `admins` | Quién administra: `ADMIN_EMAILS` | Tuyo |
+
+El contrato que cumplen las dos interfaces (rutas, guardas, menú, formato del
+sitio y props de cada sección) está en
+[docs/shell-contract.md](docs/shell-contract.md).
+
+## Añadir un modelo
+
+Se declara en `laraimport.json` y se genera como en cualquier proyecto con
+LaraPack:
+
 ```bash
-php artisan configure:domain mydomain.test
-```
-Configura el dominio que utilizarás para tu entorno de desarrollo en Laravel.
-
-### Paso 4: Compilar tus assets
-Para producción:
-
-```bash
+php artisan larapack:validate laraimport.json --vue
+php artisan larapack:import laraimport.json --vue
+php artisan migrate
+php artisan route:json
 npm run build
 ```
 
-Para desarrollo:
-
-```bash
-npm run dev
-```
-
-## Opción B (Beta):
-
-Si prefieres una intalación más rápida puedes ejecutar simplemente:
-
-```bash
-php artisan app:init mydomain.test
-``` 
-
-Y después compilar tus assets
-Para producción:
-
-```bash
-npm run build
-```
-
-Para desarrollo:
-
-```bash
-npm run dev
-```
+Su pantalla aparece sola en el menú del administrador. Para que sólo la vea un
+administrador, añade el nombre de su ruta a `adminOnly` en
+`resources/<ui>/app/config.js`.
 
 ## Advertencia
 
-**LaravelSetUp** está diseñado únicamente para ser utilizado durante el **setup inicial** de la aplicación. Una vez configurada tu aplicación, **no debe ejecutarse nuevamente**, ya que podría sobrescribir archivos importantes y causar daños en la configuración existente. Asegúrate de usarlo solo al inicio del proyecto y de realizar una copia de seguridad antes de su uso en cualquier entorno.
+`app:setup` reemplaza archivos como `bootstrap/app.php`, `routes/web.php` y
+`package.json`. Sólo corre sobre una aplicación recién creada; en cualquier otra
+se niega, salvo con `--force`.
