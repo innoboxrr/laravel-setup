@@ -11,3 +11,30 @@ on:
 jobs:
     tests:
         uses: innoboxrr/.github/.github/workflows/php-tests.yml@main
+
+    # Las interfaces se copian tal cual a cada aplicación nueva: si sus tests
+    # fallan, no se publica.
+    frontend:
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: false
+            matrix:
+                ui: [vue, react]
+
+        name: Interfaz ${{ matrix.ui }}
+
+        defaults:
+            run:
+                working-directory: tests/Frontend/${{ matrix.ui }}
+
+        steps:
+            - uses: actions/checkout@v5
+
+            - uses: actions/setup-node@v5
+              with:
+                  node-version: 22
+
+            - run: npm install --no-audit --no-fund
+
+            - run: npx vitest run
