@@ -126,8 +126,10 @@ export function createAuthStore({ http = axios, resolve = route, csrfUrl = csrfC
                 return (await http.post(resolve('auth.email.verification.notification'))).data
             },
 
+            // Es POST desde laravel-auth 6.1: cambia la cuenta de la sesión y
+            // tiene que pasar por el token CSRF.
             revertImpersonation: async () => {
-                const { data } = await http.get(resolve('auth.revert.impersonate'))
+                const { data } = await http.post(resolve('auth.revert.impersonate'))
 
                 await get().load()
 

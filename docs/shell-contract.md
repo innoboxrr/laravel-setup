@@ -97,6 +97,9 @@ Un modelo que se genere después aparece solo en el menú al compilar.
   nombres con punto (`auth.register`, `auth.logout`, `auth.forgot.password`,
   `auth.reset.password`, `auth.update.password`,
   `auth.email.verification.notification`, `auth.revert.impersonate`).
+- `revertImpersonation()`: POST de `auth.revert.impersonate` (laravel-auth 6.1
+  ya no acepta GET, que otro sitio podía disparar con un `<img>`), luego
+  `load()`. Pasa por el token CSRF como cualquier otro POST.
 - `?redirect=` sólo acepta rutas internas (empiezan por `/` y no por `//`).
 - Un 401 fuera de `load()` limpia la sesión y manda al login. Un 419 pide otra vez
   la cookie CSRF y repite la petición una vez.

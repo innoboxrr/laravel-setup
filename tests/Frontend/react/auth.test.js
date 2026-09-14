@@ -39,6 +39,20 @@ describe('auth store', () => {
         expect(store.getState()).toMatchObject({ authenticated: true, user: session.user, verified: true })
     })
 
+    // laravel-auth 6.1 sólo acepta POST: por GET otro sitio podía terminar la
+    // suplantación con un <img>.
+    it('reverts the impersonation with a POST, then loads the session', async () => {
+        const calls = []
+        const store = createAuthStore({ http: fakeHttp(calls), resolve })
+
+        await expect(store.getState().revertImpersonation()).resolves.toEqual({ success: true })
+
+        expect(calls).toEqual([
+            ['post', 'auth.revert.impersonate', undefined],
+            ['get', 'auth.get.auth'],
+        ])
+    })
+
     it('resolves the CSRF cookie by route name when routes.json has it', () => {
         expect(csrfCookieUrl()).toBe('/sanctum/csrf-cookie')
 

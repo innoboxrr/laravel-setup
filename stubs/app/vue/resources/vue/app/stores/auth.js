@@ -125,9 +125,10 @@ export const useAuthStore = defineStore('app.auth', () => {
     }
 
     // Vuelve a la cuenta propia. Si la suplantación caducó el backend cierra la
-    // sesión, y load() lo refleja.
+    // sesión, y load() lo refleja. Es POST desde laravel-auth 6.1: cambia la
+    // cuenta de la sesión y tiene que pasar por el token CSRF.
     const revertImpersonation = async () => {
-        await http.get(apiUrl(AUTH_ROUTES.revertImpersonation))
+        await http.post(apiUrl(AUTH_ROUTES.revertImpersonation))
 
         return load()
     }

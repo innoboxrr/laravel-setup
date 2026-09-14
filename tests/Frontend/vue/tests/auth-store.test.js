@@ -99,6 +99,34 @@ describe('useAuthStore', () => {
         expect(store.authenticated).toBe(false)
     })
 
+    // laravel-auth 6.1 sólo acepta POST: por GET otro sitio podía terminar la
+    // suplantación con un <img>.
+    it('reverts the impersonation with a POST, then reloads the session', async () => {
+        const calls = []
+
+        vi.spyOn(axios, 'get').mockImplementation(async (url) => {
+            calls.push(`GET ${path(url)}`)
+
+            return { data: session }
+        })
+
+        vi.spyOn(axios, 'post').mockImplementation(async (url) => {
+            calls.push(`POST ${path(url)}`)
+
+            return { data: { success: true } }
+        })
+
+        const store = useAuthStore()
+
+        await store.revertImpersonation()
+
+        expect(calls).toEqual([
+            'POST /auth/revert-impersonate',
+            'GET /auth/get-auth',
+        ])
+        expect(store.impersonating).toBe(false)
+    })
+
     it('normalizes a partial get-auth response', () => {
         expect(normalizeSession({ user: null, authenticated: true, is_admin: true })).toEqual({
             user: null,
