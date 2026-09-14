@@ -85,24 +85,31 @@ Un modelo que se genere después aparece solo en el menú al compilar.
 ## Estado
 
 **auth**
-- `load()`: GET `route('auth.get-auth')` (nombre exacto: el de
-  `config/laravel-auth.php`) → `{user, authenticated, is_admin, verified,
-  impersonating}`.
-- `login({email, password, remember})`: primero GET `/sanctum/csrf-cookie`,
-  luego el POST de login, luego `load()`.
+- `load()`: GET `route('auth.get.auth')` → `{user, authenticated, is_admin,
+  verified, impersonating}`.
+- `login({email, password, remember})`: primero GET `/sanctum/csrf-cookie`
+  (`route('sanctum.csrf-cookie')` si está en routes.json), luego el POST de
+  `auth.login`, luego `load()`.
 - `register`, `logout`, `forgotPassword`, `resetPassword`, `updatePassword`,
-  `resendVerification`, `revertImpersonation`: las rutas de laravel-auth 6.
+  `resendVerification`, `revertImpersonation`: las rutas de laravel-auth 6, con
+  nombres con punto (`auth.register`, `auth.logout`, `auth.forgot.password`,
+  `auth.reset.password`, `auth.update.password`,
+  `auth.email.verification.notification`, `auth.revert.impersonate`).
+- `?redirect=` sólo acepta rutas internas (empiezan por `/` y no por `//`).
 - Un 401 fuera de `load()` limpia la sesión y manda al login. Un 419 pide otra vez
   la cookie CSRF y repite la petición una vez.
 
 **options**
 - `load()`: GET `route('api.laravel-options.option.index', {paginate: 0})`, que es
-  público. Guarda `key → value`, y un `value` que es JSON válido se guarda ya
-  decodificado.
+  público. Guarda `key → value` y el `id` de cada opción. Un `value` que es un
+  objeto o un array JSON se guarda decodificado; cualquier otro texto se queda
+  como texto (un `site_name` "2024" no se vuelve número), igual que
+  `Option::value()` en el backend.
 - `option(path, default)`: `option('site_name')`, `option('theme.home')` (entra en
   el JSON con puntos).
-- `save(key, value)`: el update de laravel-options (sólo administrador) con el
-  `value` serializado a JSON si no es texto; actualiza el estado.
+- `save(key, value)`: el update de laravel-options (sólo administrador) con
+  `option_id`, `name`, `key` y el `value` serializado a JSON si no es texto; si
+  la opción no existe todavía, su create. Actualiza el estado.
 
 **notifications** (laravel-notifications 2.1)
 - Contador de no leídas al montar el administrador, cada 60 s y al volver a la
@@ -127,7 +134,8 @@ menú.
 - **Perfil**: nombre y correo con el `update` del usuario generado
   (`api.app.user.update`, campos `user_id`, `name`, `email`); avatar subido con
   laravel-uploads (`lu.upload.file`, campo `file`) y guardado como meta `avatar`
-  con el mismo update; contraseña con el `update-password` de laravel-auth.
+  con el mismo update, con el `uri` relativo de la subida (quitarla envía
+  `avatar: ''`); contraseña con el `update-password` de laravel-auth.
 - **Editor del sitio** (ver abajo).
 
 ## El sitio
