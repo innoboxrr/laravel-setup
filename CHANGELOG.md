@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.1.0
+
+- **Admite `larapack-generator` 8.** La restriccion era `^7.10` y bloqueaba a
+  cualquier aplicacion que quisiera el 8: Composer no cruza el salto de mayor, asi
+  que la aplicacion no podia actualizar aunque nada de este paquete dependiera de
+  lo que cambio. Ahora es `^7.10 || ^8.0`, aqui y en lo que `app:setup` instala.
+
+  Este paquete solo invoca `larapack:import` con la ruta del laraimport; no toca
+  las claves ajenas ni las tablas, que es lo que la 8.0.0 cambia —`restrict` por
+  omision en vez de cascada, y `table_prefix`—. Por eso se amplia el rango en vez
+  de saltar de mayor: quien siga en el 7 no se entera.
+
+
 ## 7.0.1
 
 - **Volver de una suplantación es un POST.** laravel-auth 6.1.0 dejó de aceptar
