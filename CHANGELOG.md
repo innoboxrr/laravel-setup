@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.2.0
+
+- **Admite `larapack-generator` 9.** La restriccion era `^7.10 || ^8.0` y
+  Composer no dejaba instalar la 9.0.0 en una aplicacion que usa este paquete.
+  Ahora es `^7.10 || ^8.0 || ^9.0`, aqui y en lo que `app:setup` instala.
+
+  Este paquete solo invoca `larapack:import`, `larapack:route-service-provider` y
+  `larapack:event-service-provider`, que siguen igual en la 9. Lo que la 9.0.0
+  cambia —la guardia de controladores en `verify`, los endpoints declarados,
+  `managed` forzado en el IndexRequest y la lista `$appendable` del Resource—
+  cae en el codigo que LaraPack genera, no en lo que este paquete hace. Por eso se
+  amplia el rango en vez de saltar de mayor.
+
 ## 7.1.0
 
 - **Admite `larapack-generator` 8.** La restriccion era `^7.10` y bloqueaba a
