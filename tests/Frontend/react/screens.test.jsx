@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
 import { buildRoutes } from '@app/router/index.jsx'
@@ -55,7 +55,9 @@ describe('screens', () => {
         expect(screen.getByRole('main')).toContainElement(hero)
         expect(screen.getByRole('main')).not.toContainElement(document.querySelector('header.site-header'))
         expect(screen.getByRole('main')).not.toContainElement(document.querySelector('footer.site-footer'))
-        expect(document.title).toBe('Inicio · Mi aplicación')
+        // El título lo pone un efecto: en un runner lento llega después del
+        // encabezado, así que se espera en vez de leerlo en el mismo tick.
+        await waitFor(() => expect(document.title).toBe('Inicio · Mi aplicación'))
     })
 
     it('shows "This page has no content yet" for a page missing from theme', async () => {
@@ -128,7 +130,7 @@ describe('screens', () => {
         expect(screen.getByText('You are viewing the account of Ana Torres.')).toBeInTheDocument()
         expect(screen.getByRole('button', { name: 'Resend the verification email' })).toBeInTheDocument()
         expect(screen.getByRole('button', { name: 'Open menu' })).toHaveAttribute('aria-expanded', 'false')
-        expect(document.title).toBe('Home · Mi aplicación')
+        await waitFor(() => expect(document.title).toBe('Home · Mi aplicación'))
     })
 
     it('loads the profile and the site editor on demand', async () => {
