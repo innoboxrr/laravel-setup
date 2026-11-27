@@ -106,6 +106,24 @@ final class SetupCommandTest extends TestCase
         $this->assertStringContainsString("\$exceptAbilities = ['forceDelete'];", $policy);
     }
 
+    /**
+     * Lo que deja app:setup tiene que pasar la puerta que larapack:ci instala:
+     * verify --strict. La 7.2.0 dejaba el fallback de la SPA en un closure con
+     * lógica y cualquier aplicación nueva nacía en rojo.
+     */
+    public function test_la_aplicacion_nueva_pasa_verify_estricto(): void
+    {
+        $this->artisan('app:setup')->assertSuccessful();
+
+        $web = $this->read('routes/web.php');
+
+        $this->assertStringContainsString('Route::fallback(SpaController::class);', $web);
+        $this->assertStringNotContainsString('function', $web);
+        $this->assertStringContainsString('return $request->handle();', $this->read('app/Http/Controllers/SpaController.php'));
+
+        $this->artisan('larapack:verify', ['--strict' => true])->assertSuccessful();
+    }
+
     public function test_todo_el_php_que_deja_compila(): void
     {
         $this->artisan('app:setup')->assertSuccessful();

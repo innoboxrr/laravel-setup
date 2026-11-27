@@ -1,5 +1,24 @@
 # Changelog
 
+## 7.2.1
+
+- **La aplicación nueva pasa `larapack:verify --strict`.** El fallback de la SPA
+  en `routes/web.php` era un closure con lógica (`abort_if` para `api/*` y JSON),
+  y `verify` lo marca como `route-closure`. Con `--strict`, que es la puerta que
+  `larapack:ci` instala desde la 9.1, toda aplicación recién creada nacía en
+  rojo. Lo encontró la prueba nocturna del ecosistema de LaraPack.
+
+  Ahora el fallback va a `App\Http\Controllers\SpaController`, cuya acción es
+  `return $request->handle();`, y la decisión vive en `App\Http\Requests\SpaRequest`:
+  una petición a `api/*` o que espera JSON sigue siendo un 404, y lo demás recibe
+  la vista `app`. La raíz pasa a `Route::view('/', 'app')`. El comportamiento
+  no cambia.
+
+  **Al actualizar.** Una aplicación ya creada no cambia sola: `app:setup` sólo
+  corre en una aplicación nueva. Para dejarla en verde, copia esos dos archivos
+  desde `stubs/app/common/app/Http/` y sustituye el closure por
+  `Route::fallback(SpaController::class);`.
+
 ## 7.2.0
 
 - **Admite `larapack-generator` 9.** La restriccion era `^7.10 || ^8.0` y
